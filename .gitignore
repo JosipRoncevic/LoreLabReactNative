@@ -1,0 +1,19 @@
+# Node modules
+node_modules/
+
+# Build folders
+android/app/build/
+ios/Pods/
+ios/build/
+
+# Logs
+*.log
+
+# VS Code settings
+.vscode/
+
+# OS files
+.DS_Store
+
+# Misc
+.env
