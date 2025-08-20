@@ -1,10 +1,12 @@
-import LoginScreen from "./src/authentication/LoginScreen";
 import React from "react";
-import RegisterScreen from "./src/authentication/RegisterScreen";
+import { NavigationContainer } from "@react-navigation/native";
+import MyStack from "./src/navigation/MyStack";
 
 const App =() =>{
   return (
-    <RegisterScreen />
+    <NavigationContainer>
+      <MyStack />
+      </NavigationContainer>
   );
 }
 

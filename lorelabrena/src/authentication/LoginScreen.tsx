@@ -1,8 +1,26 @@
-import React from "react";
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, Alert } from "react-native";
 import { CosmicTheme } from "../ui/themes/CosmicTheme";
+import auth from "@react-native-firebase/auth"
 
-const LoginScreen = () => {
+const LoginScreen = ({navigation}) => {
+
+  const [email, setEmail] =useState("")
+  const [password, setPassword] = useState("")
+
+  const loginWithEmailAndPass = () =>{
+    auth().signInWithEmailAndPassword(email, password)
+    .then((res) =>{
+      console.log(res)
+      Alert.alert("Logged in");
+      navigation.navigate("Worlds")
+    })
+    .catch(err => {
+      console.log(err.nativeErrorMessage);
+      Alert.alert(err.nativeErrorMessage)
+  });
+};
+
   return (
     <View style={styles.container}>
       <Image
@@ -12,20 +30,22 @@ const LoginScreen = () => {
       <Text style={CosmicTheme.text.heading}>Welcome Back!</Text>
 
       <TextInput
+        value={email} onChangeText={text =>setEmail(text)}
         placeholder="Username"
         placeholderTextColor={CosmicTheme.colors.starWhite + "88"}
         style={styles.input}
       />
 
       <TextInput
+        value={password} onChangeText={text =>setPassword(text)}
         placeholder="Password"
         placeholderTextColor={CosmicTheme.colors.starWhite + "88"}
         secureTextEntry
         style={styles.input}
       />
 
-      <TouchableOpacity style={styles.loginButton}>
-        <Text style={styles.loginButtonText}>Login</Text>
+      <TouchableOpacity style={styles.loginButton} onPress={loginWithEmailAndPass}>
+        <Text style={styles.loginButtonText} onPress={loginWithEmailAndPass} >Login </Text>
       </TouchableOpacity>
 
       <Text style={styles.registerText}>
