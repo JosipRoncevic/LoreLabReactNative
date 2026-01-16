@@ -1,0 +1,124 @@
+{
+  "project_info": {
+    "project_number": "508666584260",
+    "project_id": "lorelab-c63f0",
+    "storage_bucket": "lorelab-c63f0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:508666584260:android:01870b403a219cde663d91",
+        "android_client_info": {
+          "package_name": "com.example.lorelabappf"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB45FvYV_uDKV0DIqHPAYW8HUChskKza_s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:508666584260:android:5ee216cc231210fa663d91",
+        "android_client_info": {
+          "package_name": "com.lorelabappr"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB45FvYV_uDKV0DIqHPAYW8HUChskKza_s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:508666584260:android:371ca700573e3d8f663d91",
+        "android_client_info": {
+          "package_name": "com.lorelabappre"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB45FvYV_uDKV0DIqHPAYW8HUChskKza_s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:508666584260:android:7f2a46f25d66b924663d91",
+        "android_client_info": {
+          "package_name": "com.lorelabapprn"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB45FvYV_uDKV0DIqHPAYW8HUChskKza_s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:508666584260:android:1ab0148b48c88cee663d91",
+        "android_client_info": {
+          "package_name": "com.lorelabrena"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB45FvYV_uDKV0DIqHPAYW8HUChskKza_s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:508666584260:android:1429bf31923d3a07663d91",
+        "android_client_info": {
+          "package_name": "com.lorelabrn"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB45FvYV_uDKV0DIqHPAYW8HUChskKza_s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
