@@ -4,7 +4,7 @@ import React from 'react'
 const WorldsScreen =() =>{
     return (
         <View style={{justifyContent:"center",alignItems:'center',flex:1}}>
-            <Text>Worlds aaaaa</Text>
+            <Text>Worlds...</Text>
         </View>
     )
 }
