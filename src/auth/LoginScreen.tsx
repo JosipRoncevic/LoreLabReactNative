@@ -1,11 +1,28 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, Alert } from "react-native";
 import { CosmicTheme } from "../ui/themes/CosmicTheme";
+import auth from "@react-native-firebase/auth"
+import WorldsScreen from "../ui/world/WorldsScreen";
 
 const LoginScreen = ({navigation}:any)=> {
 
   const [email, setEmail] =useState("")
   const [password, setPassword] = useState("")
+
+
+  const logInWithemailAndPassword = () =>{
+    auth().signInWithEmailAndPassword(email,password)
+    .then((res) =>{
+        console.log(res)
+        Alert.alert("Logged in");
+
+        navigation.replace("Worlds");
+    })
+    .catch(err =>{
+        console.log(err.nativeErorMessage);
+        Alert.alert("Login failed");
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -31,7 +48,7 @@ const LoginScreen = ({navigation}:any)=> {
         style={styles.input}
       />
 
-      <TouchableOpacity style={styles.loginButton}>
+      <TouchableOpacity style={styles.loginButton} onPress={logInWithemailAndPassword}>
         <Text style={styles.loginButtonText} >Login </Text>
       </TouchableOpacity>
 
