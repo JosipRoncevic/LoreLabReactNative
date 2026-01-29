@@ -14,9 +14,9 @@ const LoginScreen = ({navigation}:any)=> {
     auth().signInWithEmailAndPassword(email,password)
     .then((res) =>{
         console.log(res)
-        Alert.alert("Logged in");
+        // Alert.alert("Logged in");
 
-        navigation.replace("Worlds");
+        navigation.navigate("Worlds");
     })
     .catch(err =>{
         console.log(err.nativeErorMessage);

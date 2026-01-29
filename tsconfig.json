@@ -3,6 +3,6 @@
   "compilerOptions": {
     "types": ["jest"],
   },
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx", "src/ui/viewmodels/useWorldListViewModel"],
   "exclude": ["**/node_modules", "**/Pods"]
 }
