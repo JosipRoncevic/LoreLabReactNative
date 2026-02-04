@@ -6,6 +6,16 @@ export class WorldService {
   
   private collection = firestore().collection('worlds');
 
+  async getAllWorlds() {
+    const snapshot = await this.collection
+      .get();
+
+    return snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+  }
+
    async getAllWorldsByUser(userId: string) {
     const snapshot = await this.collection
       .where('userId', '==', userId)
@@ -16,6 +26,16 @@ export class WorldService {
       ...doc.data(),
     }));
   }
+
+async getWorldById(
+  worldId: string
+): Promise<FirebaseFirestoreTypes.DocumentSnapshot> {
+  return firestore()
+    .collection('worlds')
+    .doc(worldId)
+    .get();
+}
+
 
   // static async createWorld(name: string,description: string,): Promise<void> {
   //   const userId = auth().currentUser;

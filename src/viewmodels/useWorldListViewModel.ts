@@ -13,7 +13,7 @@ export function useWorldListViewModel() {
   async function loadWorlds() {
     try {
       setLoading(true);
-      const worldsFromDb = await repository.fetchWorlds();
+      const worldsFromDb = await repository.fetchAllWorlds();
       setWorlds(worldsFromDb);
     } catch (e: unknown) {
       if (e instanceof Error) {

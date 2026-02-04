@@ -4,9 +4,9 @@ export interface World {
   id: string;
   name: string;
   description:string;
-  createdOn: FirebaseFirestoreTypes.Timestamp,
-  updatedOn: FirebaseFirestoreTypes.Timestamp,
-  userId: string  
+  createdOn: Date;
+  updatedOn: Date;
+  userId: string;
 }
 
 
