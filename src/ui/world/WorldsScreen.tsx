@@ -4,15 +4,20 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useWorldListViewModel } from "../../viewmodels/useWorldListViewModel";
 import { CosmicTheme } from "../themes/CosmicTheme";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { CreateItemDialog } from "../dialogs/CreateItemDialog";
+import { useFocusEffect } from "@react-navigation/core";
 
 type Props = NativeStackScreenProps<any, "Worlds">;
 
 export default function WorldsScreen({ navigation }: Props) {
   const { worlds, loadWorlds, loading } = useWorldListViewModel();
+  const [showCreateDialog, setShowCreateDialog] = React.useState(false);
 
-  useEffect(() => {
+  useFocusEffect(
+  React.useCallback(() => {
     loadWorlds();
-  }, []);
+  }, [])
+);
 
  return (
 
@@ -49,9 +54,19 @@ export default function WorldsScreen({ navigation }: Props) {
     <Text style={CosmicTheme.text.listTitle}>
       {item.name}
     </Text>
-    <Text style={CosmicTheme.text.listSubtitle}>
-      {item.description}
-    </Text>
+    {item.description ? (
+  <Text
+    style={CosmicTheme.text.listSubtitle}
+    numberOfLines={2}
+    ellipsizeMode="tail"
+  >
+    {item.description}
+  </Text>
+) : (
+  <Text style={[CosmicTheme.text.listSubtitle, { opacity: 0.6 }]}>
+    No description
+  </Text>
+)}
   </View>
 </View>
 
@@ -85,9 +100,12 @@ export default function WorldsScreen({ navigation }: Props) {
       )}
     </View>
 
-     { <TouchableOpacity style={styles.fab}>
-        <Text style={styles.fabText}>＋</Text>
-  </TouchableOpacity>}
+     { <TouchableOpacity
+  style={styles.fab}
+  onPress={() => setShowCreateDialog(true)}>
+  <Text style={styles.fabText}>＋</Text>
+</TouchableOpacity>}
+
   <View style={styles.bottomNav}>
       <TouchableOpacity style={styles.navItem}>
         <Ionicons
@@ -116,6 +134,13 @@ export default function WorldsScreen({ navigation }: Props) {
         />
       </TouchableOpacity>
     </View>
+    <CreateItemDialog
+  visible={showCreateDialog}
+  onClose={() => setShowCreateDialog(false)}
+  onCreateWorld={() =>
+    navigation.navigate("CreateWorld")
+  }
+/>
 
   </ImageBackground>
 );

@@ -7,17 +7,6 @@ export class WorldRepository {
 
   constructor(private service: WorldService){}
 
-  private mapToWorld(data: any): World {
-    return {
-      id: data.id,
-      name: data.name,
-      description:data.description,
-      userId:data.userId,
-      createdOn: data.createdAt.toDate(),
-      updatedOn: data.updatedOn.toDate(),
-    };
-  }
-
   async fetchWorlds(): Promise<World[]> {
     const user = auth().currentUser;
     if (!user) throw new Error('User not authenticated');
@@ -31,30 +20,30 @@ export class WorldRepository {
     return data as World[];
   }
 
-  async getWorld(worldId:string): Promise<World> {
-    const doc = await this.service.getWorldById(worldId);
-    const data = doc.data();
+   async getWorld(worldId:string): Promise<World> {
+     const doc = await this.service.getWorldById(worldId);
+     const data = doc.data();
 
-     if (!data) throw new Error('World not found');
+      if (!data) throw new Error('World not found');
 
-     return {
-      id: doc.id,
-      name: data.name,
-      description: data.description,
-      userId: data.userId,
-      createdOn: data.createdOn.toDate(),
-      updatedOn: data.updatedOn.toDate(),
-    };
+      return {
+       id: doc.id,
+       name: data.name,
+       description: data.description,
+       userId: data.userId,
+       createdOn: data.createdOn.toDate(),
+       updatedOn: data.updatedOn.toDate(),
+     };
+   }
+
+  async createWorld(name: string, description: string): Promise<void> {
+  const user = auth().currentUser;
+  if (!user) throw new Error("User not authenticated");
+
+  await this.service.addWorld({
+    name,
+    description,
+    userId: user.uid,
+  });
   }
-
-  // async addWorld(
-  //   name: string,
-  //   description: string,
-  // ): Promise<void> {
-  //   return WorldService.createWorld(name, description);
-  // }
-
-  // async removeWorld(worldId: string): Promise<void> {
-  //   return WorldService.deleteWorld(worldId);
-  // }
 }

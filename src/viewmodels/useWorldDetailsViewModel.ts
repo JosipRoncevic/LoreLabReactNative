@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from 'react';
-import { World } from '../data/models/World';
-import { WorldRepository } from '../data/repository/WorldRepository';
-import { WorldService } from '../data/services/WorldService';
+// viewmodels/useWorldDetailsViewModel.ts
+import { useEffect, useMemo, useState } from "react";
+import { World } from "../data/models/World";
+import { WorldRepository } from "../data/repository/WorldRepository";
+import { WorldService } from "../data/services/WorldService";
 
 export function useWorldDetailsViewModel(worldId: string) {
   const [world, setWorld] = useState<World | null>(null);
@@ -11,7 +12,6 @@ export function useWorldDetailsViewModel(worldId: string) {
   () => new WorldRepository(new WorldService()),
   []
 );
-
   useEffect(() => {
     repository.getWorld(worldId)
       .then(setWorld)
