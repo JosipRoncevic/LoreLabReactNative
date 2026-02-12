@@ -27,6 +27,7 @@ export class WorldService {
    async getAllWorldsByUser(userId: string) {
     const snapshot = await this.collection
       .where('userId', '==', userId)
+      .orderBy('createdOn','desc')
       .get();
 
     return snapshot.docs.map(doc => ({
@@ -52,7 +53,22 @@ async getWorldById(
   });
 }
 
-  // static async deleteWorld(worldId: string): Promise<void> {
-  //   await firestore().collection(COLLECTION).doc(worldId).delete();
-  // }
+async updateWorld(
+    worldId: string,
+    data: {
+      name: string;
+      description: string;
+    }
+  ): Promise<void> {
+    await this.collection.doc(worldId).update({
+      name: data.name,
+      description: data.description,
+      updatedOn: firestore.FieldValue.serverTimestamp(),
+    });
+  }
+
+  async deleteWorld(worldId: string): Promise<void> {
+  await this.collection.doc(worldId).delete();
+}
+
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -10,16 +10,39 @@ import {
 import { CosmicTheme } from "../themes/CosmicTheme";
 import { useCreateWorldViewModel } from "../../viewmodels/useCreateWorldViewModel";
 
-export default function CreateWorldScreen({ navigation }: any) {
-  const { createWorld, loading, error } = useCreateWorldViewModel();
+export default function CreateWorldScreen({ navigation, route }: any) {
+  const {
+    createWorld,
+    updateWorld,
+    loading,
+    error,
+  } = useCreateWorldViewModel();
+
+  const isEditMode = route?.params?.mode === "edit";
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
 
+  useEffect(() => {
+    if (isEditMode) {
+      setName(route.params.name ?? "");
+      setDescription(route.params.description ?? "");
+    }
+  }, [isEditMode, route.params]);
+
   async function onSave() {
     if (!name.trim()) return;
 
-    await createWorld(name, description);
+    if (isEditMode) {
+      await updateWorld(
+        route.params.worldId,
+        name,
+        description
+      );
+    } else {
+      await createWorld(name, description);
+    }
+
     navigation.goBack();
   }
 
@@ -33,7 +56,9 @@ export default function CreateWorldScreen({ navigation }: any) {
       style={styles.background}
     >
       <View style={styles.container}>
-        <Text style={CosmicTheme.text.heading}>Create World</Text>
+        <Text style={CosmicTheme.text.heading}>
+          {isEditMode ? "Edit World" : "Create World"}
+        </Text>
 
         {/* Name */}
         <Text style={styles.label}>Name</Text>
@@ -78,7 +103,13 @@ export default function CreateWorldScreen({ navigation }: any) {
             disabled={loading}
           >
             <Text style={styles.createText}>
-              {loading ? "Creating..." : "Create"}
+              {loading
+                ? isEditMode
+                  ? "Saving..."
+                  : "Creating..."
+                : isEditMode
+                ? "Save"
+                : "Create"}
             </Text>
           </TouchableOpacity>
         </View>

@@ -46,4 +46,23 @@ export class WorldRepository {
     userId: user.uid,
   });
   }
+
+  async editWorld(
+    worldId: string,
+    name: string,
+    description: string
+  ): Promise<void> {
+    if (!name.trim()) {
+      throw new Error("World name cannot be empty");
+    }
+
+    await this.service.updateWorld(worldId, {
+      name,
+      description,
+    });
+  }
+
+  async deleteWorld(worldId: string): Promise<void> {
+  await this.service.deleteWorld(worldId);
+  }
 }

@@ -6,12 +6,14 @@ import { CosmicTheme } from "../themes/CosmicTheme";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { CreateItemDialog } from "../dialogs/CreateItemDialog";
 import { useFocusEffect } from "@react-navigation/core";
+import { useDeleteWorldViewModel } from "../../viewmodels/useDeleteWorldViewModel";
 
 type Props = NativeStackScreenProps<any, "Worlds">;
 
 export default function WorldsScreen({ navigation }: Props) {
   const { worlds, loadWorlds, loading } = useWorldListViewModel();
   const [showCreateDialog, setShowCreateDialog] = React.useState(false);
+  const { deleteWorld, loading: deleting } = useDeleteWorldViewModel();
 
   useFocusEffect(
   React.useCallback(() => {
@@ -69,27 +71,49 @@ export default function WorldsScreen({ navigation }: Props) {
 )}
   </View>
 </View>
-
-
-
       <View style={styles.rightContent}>
-        <TouchableOpacity>
-          <Ionicons
-            name="pencil"
-            size={30}
-            color={CosmicTheme.colors.editGreen}
-            style={styles.actionIcon}
-          />
-        </TouchableOpacity>
-
-        <TouchableOpacity>
-          <Ionicons
-            name="trash"
-            size={30}
-            color={CosmicTheme.colors.deleteRed}
-            style={styles.actionIcon}
-          />
-        </TouchableOpacity>
+        <TouchableOpacity
+  onPress={() =>
+    navigation.navigate("CreateWorld", {
+      mode: "edit",
+      worldId: item.id,
+      name: item.name,
+      description: item.description,
+    })
+  }
+>
+  <Ionicons
+    name="pencil"
+    size={30}
+    color={CosmicTheme.colors.editGreen}
+    style={styles.actionIcon}
+  />
+</TouchableOpacity>
+<TouchableOpacity
+  onPress={() =>
+    Alert.alert(
+      "Delete World",
+      `Are you sure you want to delete "${item.name}"?`,
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {deleteWorld(item.id);
+          loadWorlds();
+          },
+        },
+      ]
+    )
+  }
+>
+  <Ionicons
+    name="trash"
+    size={30}
+    color={CosmicTheme.colors.deleteRed}
+    style={styles.actionIcon}
+  />
+</TouchableOpacity>
       </View>
 
     </View>

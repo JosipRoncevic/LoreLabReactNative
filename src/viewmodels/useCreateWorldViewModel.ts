@@ -1,32 +1,40 @@
 import { useMemo, useState } from "react";
 import { WorldRepository } from "../data/repository/WorldRepository";
 import { WorldService } from "../data/services/WorldService";
-import { useWorldListViewModel } from "./useWorldListViewModel";
 
 export function useCreateWorldViewModel() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
   const repository = useMemo(
     () => new WorldRepository(new WorldService()),
     []
   );
 
-  async function createWorld(
-    name: string,
-    description: string
-  ): Promise<void> {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function createWorld(name: string, description: string) {
     try {
       setLoading(true);
       setError(null);
-
       await repository.createWorld(name, description);
-    } catch (e: unknown) {
-      if (e instanceof Error) {
-        setError(e.message);
-      } else {
-        setError("Unknown error");
-      }
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Unknown error");
+      throw e;
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function updateWorld(
+    worldId: string,
+    name: string,
+    description: string
+  ) {
+    try {
+      setLoading(true);
+      setError(null);
+      await repository.editWorld(worldId, name, description);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Unknown error");
       throw e;
     } finally {
       setLoading(false);
@@ -35,6 +43,7 @@ export function useCreateWorldViewModel() {
 
   return {
     createWorld,
+    updateWorld,
     loading,
     error,
   };
