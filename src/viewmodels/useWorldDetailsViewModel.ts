@@ -1,5 +1,5 @@
 // viewmodels/useWorldDetailsViewModel.ts
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { World } from "../data/models/World";
 import { WorldRepository } from "../data/repository/WorldRepository";
 import { WorldService } from "../data/services/WorldService";
@@ -12,14 +12,23 @@ export function useWorldDetailsViewModel(worldId: string) {
   () => new WorldRepository(new WorldService()),
   []
 );
+    const fetchWorld = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await repository.getWorld(worldId);
+      setWorld(data);
+    } finally {
+      setLoading(false);
+    }
+  }, [repository, worldId]);
+
   useEffect(() => {
-    repository.getWorld(worldId)
-      .then(setWorld)
-      .finally(() => setLoading(false));
-  }, [worldId]);
+    fetchWorld();
+  }, [fetchWorld]);
 
   return {
     world,
     loading,
+    reload: fetchWorld,
   };
 }
