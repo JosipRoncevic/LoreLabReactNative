@@ -4,11 +4,15 @@ import WorldsScreen from "../ui/world/WorldsScreen";
 import CreateWorldScreen from "../ui/world/CreateWorldScreen";
 import { WorldDetailsScreen } from "../ui/world/WorldDetailsScreen";
 import { CosmicTheme } from "../ui/themes/CosmicTheme";
+import CharactersScreen from "../ui/character/CharactersScreen";
+import { CharacterDetailsScreen } from "../ui/character/CharacterDetailsScreen";
 
 export type RootStackParamList = {
   Worlds: undefined;
   WorldDetails: { id: string };
   CreateWorld: undefined;
+  Characters: undefined;
+  CharacterDetails: {id: string};
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -17,7 +21,6 @@ export const AppNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Worlds" component={WorldsScreen} />
-
       <Stack.Screen
         name="WorldDetails"
         component={WorldDetailsScreen}
@@ -32,6 +35,17 @@ export const AppNavigator = () => {
       />
 
       <Stack.Screen name="CreateWorld" component={CreateWorldScreen} />
+      <Stack.Screen name="Characters" component={CharactersScreen} />
+      <Stack.Screen name="CharacterDetails" component={CharacterDetailsScreen}options={{
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: CosmicTheme.colors.deepSpace,
+          },
+          headerTintColor: CosmicTheme.colors.starWhite,
+          headerTitle: "",
+        }}
+      />
     </Stack.Navigator>
+    
   );
 };

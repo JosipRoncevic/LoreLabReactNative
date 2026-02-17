@@ -1,15 +1,17 @@
 import { Alert, Text, TouchableOpacity, View } from 'react-native';
 import { useWorldDetailsViewModel } from '../../viewmodels/useWorldDetailsViewModel';
 import { CosmicTheme } from '../themes/CosmicTheme';
+import { AppNavigator } from '../../navigation/AppNavigator';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useDeleteWorldViewModel } from '../../viewmodels/useDeleteWorldViewModel';
 import { useFocusEffect } from '@react-navigation/core';
 import { useCallback } from 'react';
+import { useCharacterDetailsViewModel } from '../../viewmodels/character_vm/useCharacterDetailsViewModel';
 
-export function WorldDetailsScreen({ route, navigation }: any) {
+export function CharacterDetailsScreen({ route, navigation }: any) {
   const { id } = route.params;
-  const { world, loading, reload} = useWorldDetailsViewModel(id);
-  const {deleteWorld} = useDeleteWorldViewModel(); 
+  const { character, loading, reload} = useCharacterDetailsViewModel(id);
+  //const {deleteCharacter} = useDeleteCharacterViewModel(); 
 
   useFocusEffect(
   useCallback(() => {
@@ -17,7 +19,7 @@ export function WorldDetailsScreen({ route, navigation }: any) {
   }, [reload])
 );
 
-  if (loading || !world) {
+  if (loading || !character) {
     return (
       <View
         style={{
@@ -33,34 +35,34 @@ export function WorldDetailsScreen({ route, navigation }: any) {
   }
 
    function onEdit() {
-    if(world){
-      navigation.navigate("CreateWorld", {
+    if(character){
+      navigation.navigate("CreateCharacter", {
       mode: "edit",
-      worldId: world.id,
-      name: world.name,
-      description: world.description,
+      worldId: character.id,
+      name: character.name,
+      backstory: character.backstory,
     });
     }
     
   }
 
-  function onDelete() {
-    Alert.alert(
-      "Delete World",
-      "Are you sure you want to delete this world? This action cannot be undone.",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: async () => {
-            await deleteWorld(id);
-            navigation.goBack();
-          },
-        },
-      ]
-    );
-  }
+//   function onDelete() {
+//     Alert.alert(
+//       "Delete Character",
+//       "Are you sure you want to delete this character? This action cannot be undone.",
+//       [
+//         { text: "Cancel", style: "cancel" },
+//         {
+//           text: "Delete",
+//           style: "destructive",
+//           onPress: async () => {
+//             await deleteCharacter(id);
+//             navigation.goBack();
+//           },
+//         },
+//       ]
+//     );
+//   }
 
   return (
     <View
@@ -79,9 +81,9 @@ export function WorldDetailsScreen({ route, navigation }: any) {
 </TouchableOpacity> */}
 
       {/* World Card */}
-      <View style={[CosmicTheme.containers.listItem1, { padding: 20 }]}>
+      <View style={[CosmicTheme.containers.listItem2, { padding: 20 }]}>
         <Text style={CosmicTheme.text.heading}>
-          {world.name}
+          {character.name}
         </Text>
 
         <Text
@@ -90,7 +92,7 @@ export function WorldDetailsScreen({ route, navigation }: any) {
             { marginTop: 12, lineHeight: 22 },
           ]}
         >
-          {world.description}
+          {character.backstory}
         </Text>
 
         {/* Divider */}
@@ -108,7 +110,7 @@ export function WorldDetailsScreen({ route, navigation }: any) {
             { fontStyle: 'italic' },
           ]}
         >
-          Created on: {world.createdOn.toLocaleDateString()}
+          Created on: {character.createdOn.toLocaleDateString()}
         </Text>
 
         <Text
@@ -117,7 +119,7 @@ export function WorldDetailsScreen({ route, navigation }: any) {
             { fontStyle: 'italic', marginTop: 6 },
           ]}
         >
-          Updated on: {world.updatedOn.toLocaleDateString()}
+          Updated on: {character.updatedOn.toLocaleDateString()}
         </Text>
       </View>
 
@@ -163,7 +165,7 @@ export function WorldDetailsScreen({ route, navigation }: any) {
 
         {/* Delete */}
         <TouchableOpacity
-          onPress={onDelete}
+          //onPress={onDelete}
           style={{
             flex: 1,
             backgroundColor:

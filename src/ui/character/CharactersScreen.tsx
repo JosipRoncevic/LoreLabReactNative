@@ -7,17 +7,18 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { CreateItemDialog } from "../dialogs/CreateItemDialog";
 import { useFocusEffect } from "@react-navigation/core";
 import { useDeleteWorldViewModel } from "../../viewmodels/useDeleteWorldViewModel";
+import { useCharacterListViewModel } from "../../viewmodels/character_vm/useCharacterListViewModel";
 
-type Props = NativeStackScreenProps<any, "Worlds">;
+type Props = NativeStackScreenProps<any, "Characters">;
 
-export default function WorldsScreen({ navigation }: Props) {
-  const { worlds, loadWorlds, loading } = useWorldListViewModel();
+export default function CharactersScreen({ navigation }: Props) {
+  const { characters, loadCharacters, loading } = useCharacterListViewModel();
   const [showCreateDialog, setShowCreateDialog] = React.useState(false);
-  const { deleteWorld, loading: deleting } = useDeleteWorldViewModel();
+  //const { deleteCharacter, loading: deleting } = useDeleteCharacterViewModel();
 
   useFocusEffect(
   React.useCallback(() => {
-    loadWorlds();
+    loadCharacters();
   }, [])
 );
 
@@ -28,27 +29,28 @@ export default function WorldsScreen({ navigation }: Props) {
     style={{ flex: 1 }}
   >
   <View style={styles.header}>
-      <Text style={CosmicTheme.text.heading}>Worlds</Text>
+      <Text style={CosmicTheme.text.heading}>Characters</Text>
   </View>
 
     <View style={styles.content}>
-      {loading && worlds.length === 0 && <Text>Loading...</Text>}
-      {!loading && worlds.length === 0 && <Text>No worlds found</Text>}
+      {loading && characters.length === 0 && <Text>Loading...</Text>}
+      {!loading && characters.length === 0 && <Text>No characters found</Text>}
 
-      {!loading && worlds.length > 0 && (
+      {!loading && characters.length > 0 && (
         <FlatList
-          data={worlds}
+          data={characters}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
   <TouchableOpacity 
-      onPress={() => navigation.navigate('WorldDetails', { id: item.id })}>
+      onPress={() => navigation.navigate('CharacterDetails', { id: item.id })}
+      >
     <View style={styles.listItem}>
       
       <View style={styles.leftContent}>
   <Ionicons
-    name="planet"
+    name="man"
     size={40}
-    color={CosmicTheme.colors.galaxyPink}
+    color={CosmicTheme.colors.storyGreen}
     style={styles.planetIcon}
   />
 
@@ -56,31 +58,31 @@ export default function WorldsScreen({ navigation }: Props) {
     <Text style={CosmicTheme.text.listTitle}>
       {item.name}
     </Text>
-    {item.description ? (
+    {item.backstory ? (
   <Text
     style={CosmicTheme.text.listSubtitle}
     numberOfLines={2}
     ellipsizeMode="tail"
   >
-    {item.description}
+    {item.backstory}
   </Text>
 ) : (
   <Text style={[CosmicTheme.text.listSubtitle, { opacity: 0.6 }]}>
-    No description
+    No backstory
   </Text>
 )}
   </View>
 </View>
       <View style={styles.rightContent}>
         <TouchableOpacity
-  onPress={() =>
-    navigation.navigate("CreateWorld", {
-      mode: "edit",
-      worldId: item.id,
-      name: item.name,
-      description: item.description,
-    })
-  }
+//   onPress={() =>
+//     navigation.navigate("CreateCharacter", {
+//       mode: "edit",
+//       worldId: item.id,
+//       name: item.name,
+//       description: item.backstory,
+//     })
+//   }
 >
   <Ionicons
     name="pencil"
@@ -90,22 +92,22 @@ export default function WorldsScreen({ navigation }: Props) {
   />
 </TouchableOpacity>
 <TouchableOpacity
-  onPress={() =>
-    Alert.alert(
-      "Delete World",
-      `Are you sure you want to delete "${item.name}"?`,
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: async () => {deleteWorld(item.id);
-          loadWorlds();
-          },
-        },
-      ]
-    )
-  }
+//   onPress={() =>
+//     Alert.alert(
+//       "Delete Character",
+//       `Are you sure you want to delete "${item.name}"?`,
+//       [
+//         { text: "Cancel", style: "cancel" },
+//         {
+//           text: "Delete",
+//           style: "destructive",
+//           onPress: async () => {deleteCharacter(item.id);
+//           loadCharacters();
+//           },
+//         },
+//       ]
+//     )
+//   }
 >
   <Ionicons
     name="trash"
@@ -137,6 +139,8 @@ export default function WorldsScreen({ navigation }: Props) {
           size={40}
           color={CosmicTheme.colors.starWhite}
           style={styles.planetIcon}
+          onPress={()=> navigation.navigate("Worlds")}
+
         />
       </TouchableOpacity>
 
@@ -146,7 +150,6 @@ export default function WorldsScreen({ navigation }: Props) {
           size={40}
           color={CosmicTheme.colors.starWhite}
           style={styles.planetIcon}
-          onPress={()=> navigation.navigate("Characters")}
         />
       </TouchableOpacity>
 
@@ -159,13 +162,13 @@ export default function WorldsScreen({ navigation }: Props) {
         />
       </TouchableOpacity>
     </View>
-    <CreateItemDialog
+    {/* <CreateItemDialog
   visible={showCreateDialog}
   onClose={() => setShowCreateDialog(false)}
-  onCreateWorld={() =>
-    navigation.navigate("CreateWorld")
+  onCreateCharacter={() =>
+    navigation.navigate("CreateCharacter")
   }
-/>
+/> */}
 
   </ImageBackground>
 );
@@ -184,7 +187,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   listItem: {
-    ...CosmicTheme.containers.listItem1,
+    ...CosmicTheme.containers.listItem2,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
