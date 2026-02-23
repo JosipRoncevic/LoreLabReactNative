@@ -7,11 +7,13 @@ import { useDeleteWorldViewModel } from '../../viewmodels/useDeleteWorldViewMode
 import { useFocusEffect } from '@react-navigation/core';
 import { useCallback } from 'react';
 import { useCharacterDetailsViewModel } from '../../viewmodels/character_vm/useCharacterDetailsViewModel';
+import { useDeleteCharacterViewModel } from '../../viewmodels/character_vm/useDeleteCharacterViewModel';
 
 export function CharacterDetailsScreen({ route, navigation }: any) {
   const { id } = route.params;
-  const { character, loading, reload} = useCharacterDetailsViewModel(id);
-  //const {deleteCharacter} = useDeleteCharacterViewModel(); 
+  const { character, loading, reload } =
+  useCharacterDetailsViewModel(id);
+  const {deleteCharacter} = useDeleteCharacterViewModel(); 
 
   useFocusEffect(
   useCallback(() => {
@@ -46,23 +48,23 @@ export function CharacterDetailsScreen({ route, navigation }: any) {
     
   }
 
-//   function onDelete() {
-//     Alert.alert(
-//       "Delete Character",
-//       "Are you sure you want to delete this character? This action cannot be undone.",
-//       [
-//         { text: "Cancel", style: "cancel" },
-//         {
-//           text: "Delete",
-//           style: "destructive",
-//           onPress: async () => {
-//             await deleteCharacter(id);
-//             navigation.goBack();
-//           },
-//         },
-//       ]
-//     );
-//   }
+   function onDelete() {
+     Alert.alert(
+       "Delete Character",
+       "Are you sure you want to delete this character? This action cannot be undone.",
+       [
+         { text: "Cancel", style: "cancel" },
+         {
+           text: "Delete",
+           style: "destructive",
+           onPress: async () => {
+             await deleteCharacter(id);
+             navigation.goBack();
+           },
+         },
+       ]
+     );
+   }
 
   return (
     <View
@@ -72,13 +74,13 @@ export function CharacterDetailsScreen({ route, navigation }: any) {
         padding: 20,
       }}
     >
-      {/* <TouchableOpacity onPress={() => navigation.goBack()}>
-  <Icon
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+  <Ionicons
     name="arrow-back"
     size={24}
     color={CosmicTheme.colors.starWhite}
   />
-</TouchableOpacity> */}
+</TouchableOpacity>
 
       {/* World Card */}
       <View style={[CosmicTheme.containers.listItem2, { padding: 20 }]}>
@@ -94,6 +96,15 @@ export function CharacterDetailsScreen({ route, navigation }: any) {
         >
           {character.backstory}
         </Text>
+
+        <Text
+  style={[
+    CosmicTheme.text.body,
+    { marginTop: 12, lineHeight: 22 },
+  ]}
+>
+  World: Unknown world
+</Text>
 
         {/* Divider */}
         <View
@@ -165,7 +176,7 @@ export function CharacterDetailsScreen({ route, navigation }: any) {
 
         {/* Delete */}
         <TouchableOpacity
-          //onPress={onDelete}
+          onPress={onDelete}
           style={{
             flex: 1,
             backgroundColor:

@@ -1,4 +1,3 @@
-// viewmodels/useWorldDetailsViewModel.ts
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Character } from "../../data/models/Character";
 import { CharacterRepository } from "../../data/repository/CharacterRepository";

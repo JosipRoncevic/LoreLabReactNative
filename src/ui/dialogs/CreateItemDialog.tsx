@@ -12,12 +12,14 @@ type Props = {
   visible: boolean;
   onClose: () => void;
   onCreateWorld: () => void;
+  onCreateCharacter:() => void;
 };
 
 export function CreateItemDialog({
   visible,
   onClose,
   onCreateWorld,
+  onCreateCharacter,
 }: Props) {
   if (!visible) return null;
 
@@ -42,11 +44,15 @@ export function CreateItemDialog({
           <Text style={styles.text}>World</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.item} disabled>
-          <Ionicons name="person" size={24} color="#888" />
-          <Text style={[styles.text, { color: "#888" }]}>
-            Character (coming soon)
-          </Text>
+        <TouchableOpacity
+          style={styles.item}
+          onPress={() => {
+            onClose();
+            onCreateCharacter();
+          }}
+        >
+          <Ionicons name="human" size={24} color="#fff" />
+          <Text style={styles.text}>Character</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.item} disabled>

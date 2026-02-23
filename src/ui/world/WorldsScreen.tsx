@@ -160,12 +160,11 @@ export default function WorldsScreen({ navigation }: Props) {
       </TouchableOpacity>
     </View>
     <CreateItemDialog
-  visible={showCreateDialog}
-  onClose={() => setShowCreateDialog(false)}
-  onCreateWorld={() =>
-    navigation.navigate("CreateWorld")
-  }
-/>
+       visible={showCreateDialog}
+       onClose={() => setShowCreateDialog(false)}
+       onCreateWorld={() => navigation.navigate("CreateWorld")} 
+       onCreateCharacter={() => navigation.navigate("CreateCharacter")} 
+       />
 
   </ImageBackground>
 );

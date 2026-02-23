@@ -6,15 +6,15 @@ import { CosmicTheme } from "../themes/CosmicTheme";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { CreateItemDialog } from "../dialogs/CreateItemDialog";
 import { useFocusEffect } from "@react-navigation/core";
-import { useDeleteWorldViewModel } from "../../viewmodels/useDeleteWorldViewModel";
 import { useCharacterListViewModel } from "../../viewmodels/character_vm/useCharacterListViewModel";
+import { useDeleteCharacterViewModel } from "../../viewmodels/character_vm/useDeleteCharacterViewModel";
 
 type Props = NativeStackScreenProps<any, "Characters">;
 
 export default function CharactersScreen({ navigation }: Props) {
   const { characters, loadCharacters, loading } = useCharacterListViewModel();
   const [showCreateDialog, setShowCreateDialog] = React.useState(false);
-  //const { deleteCharacter, loading: deleting } = useDeleteCharacterViewModel();
+  const { deleteCharacter, loading: deleting } = useDeleteCharacterViewModel();
 
   useFocusEffect(
   React.useCallback(() => {
@@ -75,14 +75,14 @@ export default function CharactersScreen({ navigation }: Props) {
 </View>
       <View style={styles.rightContent}>
         <TouchableOpacity
-//   onPress={() =>
-//     navigation.navigate("CreateCharacter", {
-//       mode: "edit",
-//       worldId: item.id,
-//       name: item.name,
-//       description: item.backstory,
-//     })
-//   }
+   onPress={() =>
+     navigation.navigate("CreateCharacter", {
+       mode: "edit",
+       worldId: item.id,
+       name: item.name,
+       description: item.backstory,
+     })
+   }
 >
   <Ionicons
     name="pencil"
@@ -92,22 +92,22 @@ export default function CharactersScreen({ navigation }: Props) {
   />
 </TouchableOpacity>
 <TouchableOpacity
-//   onPress={() =>
-//     Alert.alert(
-//       "Delete Character",
-//       `Are you sure you want to delete "${item.name}"?`,
-//       [
-//         { text: "Cancel", style: "cancel" },
-//         {
-//           text: "Delete",
-//           style: "destructive",
-//           onPress: async () => {deleteCharacter(item.id);
-//           loadCharacters();
-//           },
-//         },
-//       ]
-//     )
-//   }
+   onPress={() =>
+     Alert.alert(
+       "Delete Character",
+       `Are you sure you want to delete "${item.name}"?`,
+       [
+         { text: "Cancel", style: "cancel" },
+         {
+           text: "Delete",
+           style: "destructive",
+           onPress: async () => {deleteCharacter(item.id);
+           loadCharacters();
+           },
+         },
+       ]
+     )
+   }
 >
   <Ionicons
     name="trash"
@@ -162,13 +162,12 @@ export default function CharactersScreen({ navigation }: Props) {
         />
       </TouchableOpacity>
     </View>
-    {/* <CreateItemDialog
-  visible={showCreateDialog}
-  onClose={() => setShowCreateDialog(false)}
-  onCreateCharacter={() =>
-    navigation.navigate("CreateCharacter")
-  }
-/> */}
+    <CreateItemDialog
+       visible={showCreateDialog}
+       onClose={() => setShowCreateDialog(false)}
+       onCreateCharacter={() => navigation.navigate("CreateCharacter")} 
+       onCreateWorld={() => navigation.navigate("CreateWorld")}
+       />
 
   </ImageBackground>
 );

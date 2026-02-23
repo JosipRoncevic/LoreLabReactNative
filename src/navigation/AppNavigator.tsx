@@ -6,6 +6,7 @@ import { WorldDetailsScreen } from "../ui/world/WorldDetailsScreen";
 import { CosmicTheme } from "../ui/themes/CosmicTheme";
 import CharactersScreen from "../ui/character/CharactersScreen";
 import { CharacterDetailsScreen } from "../ui/character/CharacterDetailsScreen";
+import CreateCharacterScreen from "../ui/character/CreateCharacterScreen";
 
 export type RootStackParamList = {
   Worlds: undefined;
@@ -13,6 +14,7 @@ export type RootStackParamList = {
   CreateWorld: undefined;
   Characters: undefined;
   CharacterDetails: {id: string};
+  CreateCharacter: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -45,6 +47,8 @@ export const AppNavigator = () => {
           headerTitle: "",
         }}
       />
+      <Stack.Screen name="CreateCharacter" component={CreateCharacterScreen}/>
+
     </Stack.Navigator>
     
   );
