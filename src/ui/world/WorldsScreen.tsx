@@ -156,6 +156,8 @@ export default function WorldsScreen({ navigation }: Props) {
           size={40}
           color={CosmicTheme.colors.starWhite}
           style={styles.planetIcon}
+          onPress={()=> navigation.navigate("Stories")}
+
         />
       </TouchableOpacity>
     </View>
@@ -164,6 +166,7 @@ export default function WorldsScreen({ navigation }: Props) {
        onClose={() => setShowCreateDialog(false)}
        onCreateWorld={() => navigation.navigate("CreateWorld")} 
        onCreateCharacter={() => navigation.navigate("CreateCharacter")} 
+       onCreateStory={()=> navigation.navigate("CreateStory")}
        />
 
   </ImageBackground>

@@ -7,6 +7,10 @@ import { CosmicTheme } from "../ui/themes/CosmicTheme";
 import CharactersScreen from "../ui/character/CharactersScreen";
 import { CharacterDetailsScreen } from "../ui/character/CharacterDetailsScreen";
 import CreateCharacterScreen from "../ui/character/CreateCharacterScreen";
+import StoryScreen from "../ui/story/StoryScreen";
+import CreateStoryScreen from "../ui/story/CreateStoryScreen";
+import { StoryDetailsScreen } from "../ui/story/StoryDetailsScreen";
+import StoriesScreen from "../ui/story/StoryScreen";
 
 export type RootStackParamList = {
   Worlds: undefined;
@@ -15,6 +19,9 @@ export type RootStackParamList = {
   Characters: undefined;
   CharacterDetails: {id: string};
   CreateCharacter: undefined;
+  Stories: undefined;
+  StoryDetails: {id:string};
+  CreateStory: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -48,6 +55,17 @@ export const AppNavigator = () => {
         }}
       />
       <Stack.Screen name="CreateCharacter" component={CreateCharacterScreen}/>
+      <Stack.Screen name="Stories" component={StoriesScreen} />
+      <Stack.Screen name="StoryDetails" component={StoryDetailsScreen}options={{
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: CosmicTheme.colors.deepSpace,
+          },
+          headerTintColor: CosmicTheme.colors.starWhite,
+          headerTitle: "",
+        }}
+      />
+      <Stack.Screen name="CreateStory" component={CreateStoryScreen}/>
 
     </Stack.Navigator>
     

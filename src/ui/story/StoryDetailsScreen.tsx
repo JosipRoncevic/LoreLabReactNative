@@ -1,27 +1,23 @@
 import { Alert, Text, TouchableOpacity, View } from 'react-native';
-import { useWorldDetailsViewModel } from '../../viewmodels/useWorldDetailsViewModel';
 import { CosmicTheme } from '../themes/CosmicTheme';
-import { AppNavigator } from '../../navigation/AppNavigator';
-import Ionicons from "react-native-vector-icons/Ionicons";
-import { useDeleteWorldViewModel } from '../../viewmodels/useDeleteWorldViewModel';
 import { useFocusEffect } from '@react-navigation/core';
 import { useCallback } from 'react';
-import { useCharacterDetailsViewModel } from '../../viewmodels/character_vm/useCharacterDetailsViewModel';
-import { useDeleteCharacterViewModel } from '../../viewmodels/character_vm/useDeleteCharacterViewModel';
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { useStoryDetailsViewModel } from '../../viewmodels/story_vm/useDetailsStoryViewModel';
+import { useDeleteStoryViewModel } from '../../viewmodels/story_vm/useDeleteCharacterViewModel';
 
-export function CharacterDetailsScreen({ route, navigation }: any) {
+export function StoryDetailsScreen({ route, navigation }: any) {
   const { id } = route.params;
-  const { character, loading, reload } =
-  useCharacterDetailsViewModel(id);
-  const {deleteCharacter} = useDeleteCharacterViewModel(); 
+  const { story, loading, reload } = useStoryDetailsViewModel(id);
+  const { deleteStory } = useDeleteStoryViewModel();
 
   useFocusEffect(
-  useCallback(() => {
-    reload();
-  }, [reload])
-);
+    useCallback(() => {
+      reload();
+    }, [reload])
+  );
 
-  if (loading || !character) {
+  if (loading || !story) {
     return (
       <View
         style={{
@@ -36,35 +32,34 @@ export function CharacterDetailsScreen({ route, navigation }: any) {
     );
   }
 
-   function onEdit() {
-    if(character){
-      navigation.navigate("CreateCharacter", {
-      mode: "edit",
-      worldId: character.id,
-      name: character.name,
-      backstory: character.backstory,
-    });
+  function onEdit() {
+    if (story) {
+      navigation.navigate("CreateStory", {
+        mode: "edit",
+        storyId: story.id,
+        title: story.title,
+        content: story.content,
+      });
     }
-    
   }
 
-   function onDelete() {
-     Alert.alert(
-       "Delete Character",
-       "Are you sure you want to delete this character? This action cannot be undone.",
-       [
-         { text: "Cancel", style: "cancel" },
-         {
-           text: "Delete",
-           style: "destructive",
-           onPress: async () => {
-             await deleteCharacter(id);
-             navigation.goBack();
-           },
-         },
-       ]
-     );
-   }
+  function onDelete() {
+    Alert.alert(
+      "Delete Story",
+      "Are you sure you want to delete this story? This action cannot be undone.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            await deleteStory(id);
+            navigation.goBack();
+          },
+        },
+      ]
+    );
+  }
 
   return (
     <View
@@ -74,14 +69,12 @@ export function CharacterDetailsScreen({ route, navigation }: any) {
         padding: 20,
       }}
     >
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-  
-</TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.goBack()} />
 
-      {/* World Card */}
+      {/* Story Card */}
       <View style={[CosmicTheme.containers.listItem2, { padding: 20 }]}>
         <Text style={CosmicTheme.text.heading}>
-          {character.name}
+          {story.title}
         </Text>
 
         <Text
@@ -90,17 +83,8 @@ export function CharacterDetailsScreen({ route, navigation }: any) {
             { marginTop: 12, lineHeight: 22 },
           ]}
         >
-          {character.backstory}
+          {story.content || "No content"}
         </Text>
-
-        <Text
-  style={[
-    CosmicTheme.text.body,
-    { marginTop: 12, lineHeight: 22 },
-  ]}
->
-  World: Unknown world
-</Text>
 
         {/* Divider */}
         <View
@@ -112,12 +96,9 @@ export function CharacterDetailsScreen({ route, navigation }: any) {
         />
 
         <Text
-          style={[
-            CosmicTheme.text.listSubtitle,
-            { fontStyle: 'italic' },
-          ]}
+          style={[CosmicTheme.text.listSubtitle, { fontStyle: 'italic' }]}
         >
-          Created on: {character.createdOn.toLocaleDateString()}
+          Created on: {story.createdOn.toLocaleDateString()}
         </Text>
 
         <Text
@@ -126,7 +107,7 @@ export function CharacterDetailsScreen({ route, navigation }: any) {
             { fontStyle: 'italic', marginTop: 6 },
           ]}
         >
-          Updated on: {character.updatedOn.toLocaleDateString()}
+          Updated on: {story.updatedOn.toLocaleDateString()}
         </Text>
       </View>
 
@@ -143,8 +124,7 @@ export function CharacterDetailsScreen({ route, navigation }: any) {
           onPress={onEdit}
           style={{
             flex: 1,
-            backgroundColor:
-              CosmicTheme.colors.editGreen,
+            backgroundColor: CosmicTheme.colors.editGreen,
             paddingVertical: 14,
             borderRadius: 14,
             alignItems: "center",
@@ -160,8 +140,7 @@ export function CharacterDetailsScreen({ route, navigation }: any) {
           />
           <Text
             style={{
-              color:
-                CosmicTheme.colors.starWhite,
+              color: CosmicTheme.colors.starWhite,
               fontSize: 16,
               fontWeight: "600",
             }}
@@ -175,8 +154,7 @@ export function CharacterDetailsScreen({ route, navigation }: any) {
           onPress={onDelete}
           style={{
             flex: 1,
-            backgroundColor:
-              CosmicTheme.colors.deleteRed,
+            backgroundColor: CosmicTheme.colors.deleteRed,
             paddingVertical: 14,
             borderRadius: 14,
             alignItems: "center",
@@ -192,8 +170,7 @@ export function CharacterDetailsScreen({ route, navigation }: any) {
           />
           <Text
             style={{
-              color:
-                CosmicTheme.colors.starWhite,
+              color: CosmicTheme.colors.starWhite,
               fontSize: 16,
               fontWeight: "600",
             }}

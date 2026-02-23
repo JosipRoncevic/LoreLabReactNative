@@ -50,7 +50,7 @@ export default function CharactersScreen({ navigation }: Props) {
   <Ionicons
     name="man"
     size={40}
-    color={CosmicTheme.colors.storyGreen}
+    color={CosmicTheme.colors.characterBlue}
     style={styles.planetIcon}
   />
 
@@ -159,6 +159,8 @@ export default function CharactersScreen({ navigation }: Props) {
           size={40}
           color={CosmicTheme.colors.starWhite}
           style={styles.planetIcon}
+          onPress={()=> navigation.navigate("Stories")}
+
         />
       </TouchableOpacity>
     </View>
@@ -167,7 +169,9 @@ export default function CharactersScreen({ navigation }: Props) {
        onClose={() => setShowCreateDialog(false)}
        onCreateCharacter={() => navigation.navigate("CreateCharacter")} 
        onCreateWorld={() => navigation.navigate("CreateWorld")}
-       />
+       onCreateStory={() => navigation.navigate("CreateStory")}
+
+/>
 
   </ImageBackground>
 );
