@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import {View,Text,FlatList,TouchableOpacity,Alert, ImageBackground, StyleSheet,} from "react-native";
+import {View,Text,FlatList,TouchableOpacity,Alert, ImageBackground, StyleSheet, Modal,} from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useWorldListViewModel } from "../../viewmodels/useWorldListViewModel";
 import { CosmicTheme } from "../themes/CosmicTheme";
@@ -7,6 +7,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { CreateItemDialog } from "../dialogs/CreateItemDialog";
 import { useFocusEffect } from "@react-navigation/core";
 import { useDeleteWorldViewModel } from "../../viewmodels/useDeleteWorldViewModel";
+import { useAuthViewModel } from "../../auth/useAuthViewModel";
 
 type Props = NativeStackScreenProps<any, "Worlds">;
 
@@ -14,6 +15,8 @@ export default function WorldsScreen({ navigation }: Props) {
   const { worlds, loadWorlds, loading } = useWorldListViewModel();
   const [showCreateDialog, setShowCreateDialog] = React.useState(false);
   const { deleteWorld, loading: deleting } = useDeleteWorldViewModel();
+  const { userEmail, logout } = useAuthViewModel();
+  const [showProfileModal, setShowProfileModal] = React.useState(false);
 
   useFocusEffect(
   React.useCallback(() => {
@@ -29,6 +32,14 @@ export default function WorldsScreen({ navigation }: Props) {
   >
   <View style={styles.header}>
       <Text style={CosmicTheme.text.heading}>Worlds</Text>
+          <TouchableOpacity onPress={() => setShowProfileModal(true)}>
+          <Ionicons
+            name="person-circle-outline"
+            size={36}
+            color={CosmicTheme.colors.starWhite}
+          />
+        </TouchableOpacity>
+
   </View>
 
     <View style={styles.content}>
@@ -161,6 +172,41 @@ export default function WorldsScreen({ navigation }: Props) {
         />
       </TouchableOpacity>
     </View>
+
+      <Modal
+  visible={showProfileModal}
+  transparent
+  animationType="fade"
+  onRequestClose={() => setShowProfileModal(false)} 
+>
+  <View style={styles.modalBackdrop}>
+    <View style={styles.modalCard}>
+      <Ionicons
+        name="person-circle"
+        size={64}
+        color={CosmicTheme.colors.starWhite}
+      />
+
+      <Text style={styles.emailText}>{userEmail}</Text>
+
+      <TouchableOpacity
+        style={styles.logoutButton}
+        onPress={() => {
+          logout();              
+          setShowProfileModal(false);
+        }}
+      >
+        <Ionicons name="log-out-outline" size={22} color="#fff" />
+        <Text style={styles.logoutText}>Log out</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => setShowProfileModal(false)}>
+        <Text style={styles.closeText}>Close</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+</Modal>
+
     <CreateItemDialog
        visible={showCreateDialog}
        onClose={() => setShowCreateDialog(false)}
@@ -177,8 +223,10 @@ const styles = StyleSheet.create({
   header: {
     marginTop: 20,
     height: 56,
-    justifyContent: "center",
     paddingHorizontal: 16,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
 
   content: {
@@ -248,5 +296,39 @@ const styles = StyleSheet.create({
   navText: {
     color: "#fff",
     fontSize: 14,
+  },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.6)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalCard: {
+    width: "80%",
+    backgroundColor: "#111",
+    borderRadius: 16,
+    padding: 24,
+    alignItems: "center",
+  },
+  emailText: {
+    color: "#fff",
+    marginVertical: 12,
+  },
+  logoutButton: {
+    flexDirection: "row",
+    backgroundColor: "#d9534f",
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 12,
+    alignItems: "center",
+  },
+  logoutText: {
+    color: "#fff",
+    marginLeft: 8,
+    fontWeight: "bold",
+  },
+  closeText: {
+    color: "#aaa",
+    marginTop: 16,
   },
 });
