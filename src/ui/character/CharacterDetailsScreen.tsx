@@ -1,7 +1,6 @@
 import { Alert, Text, TouchableOpacity, View } from 'react-native';
 import { useWorldDetailsViewModel } from '../../viewmodels/useWorldDetailsViewModel';
 import { CosmicTheme } from '../themes/CosmicTheme';
-import { AppNavigator } from '../../navigation/AppNavigator';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useDeleteWorldViewModel } from '../../viewmodels/useDeleteWorldViewModel';
 import { useFocusEffect } from '@react-navigation/core';

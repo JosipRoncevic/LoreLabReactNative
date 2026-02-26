@@ -28,6 +28,19 @@ export function useAuthViewModel() {
     }
   }
 
+  async function register(email: string, password: string) {
+    try {
+      setLoading(true);
+      setError(null);
+      await auth().createUserWithEmailAndPassword(email, password);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Registration failed");
+      throw e;
+    } finally {
+      setLoading(false);
+    }
+  }
+
   async function logout() {
     try {
       setLoading(true);
@@ -47,6 +60,7 @@ export function useAuthViewModel() {
     loading,
     error,
     login,
+    register,
     logout,
   };
 }

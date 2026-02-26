@@ -1,13 +1,12 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import WorldsScreen from "./src/ui/world/WorldsScreen";
-import LoginScreen from "./src/auth/LoginScreen";
-import { AppNavigator } from "./src/navigation/AppNavigator";
+import { MainNavigator } from "./src/navigation/MainNavigator";
+import { RootNavigator } from "./src/navigation/RootNavigator";
 
 const App =() =>{
   return (
     <NavigationContainer>
-      <AppNavigator />
+      <RootNavigator />
       </NavigationContainer>
   );
 }
