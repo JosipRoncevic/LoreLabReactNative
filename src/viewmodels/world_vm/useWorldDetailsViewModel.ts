@@ -1,8 +1,8 @@
-// viewmodels/useWorldDetailsViewModel.ts
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { World } from "../data/models/World";
-import { WorldRepository } from "../data/repository/WorldRepository";
-import { WorldService } from "../data/services/WorldService";
+import { World } from "../../data/models/World";
+import { WorldRepository } from "../../data/repository/WorldRepository";
+import { WorldService } from "../../data/services/WorldService";
+import { Character } from "../../data/models/Character";
 
 export function useWorldDetailsViewModel(worldId: string) {
   const [world, setWorld] = useState<World | null>(null);
@@ -12,6 +12,7 @@ export function useWorldDetailsViewModel(worldId: string) {
   () => new WorldRepository(new WorldService()),
   []
 );
+
     const fetchWorld = useCallback(async () => {
     setLoading(true);
     try {

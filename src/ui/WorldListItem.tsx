@@ -7,8 +7,8 @@ import {
   StyleSheet,
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { useDeleteWorldViewModel } from "../viewmodels/useDeleteWorldViewModel";
 import { CosmicTheme } from "./themes/CosmicTheme";
+import { useDeleteWorldViewModel } from "../viewmodels/world_vm/useDeleteWorldViewModel";
 
 type Props = {
   world: any;

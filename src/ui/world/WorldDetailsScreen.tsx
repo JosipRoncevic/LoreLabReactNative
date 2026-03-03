@@ -1,15 +1,17 @@
 import { Alert, Text, TouchableOpacity, View } from 'react-native';
-import { useWorldDetailsViewModel } from '../../viewmodels/useWorldDetailsViewModel';
+import { useWorldDetailsViewModel } from '../../viewmodels/world_vm/useWorldDetailsViewModel';
 import { CosmicTheme } from '../themes/CosmicTheme';
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { useDeleteWorldViewModel } from '../../viewmodels/useDeleteWorldViewModel';
 import { useFocusEffect } from '@react-navigation/core';
 import { useCallback } from 'react';
+import { useDeleteWorldViewModel } from '../../viewmodels/world_vm/useDeleteWorldViewModel';
+import { useWorldCharactersViewModel } from '../../viewmodels/character_vm/useWorldCharactersViewModel';
 
 export function WorldDetailsScreen({ route, navigation }: any) {
   const { id } = route.params;
   const { world, loading, reload} = useWorldDetailsViewModel(id);
   const {deleteWorld} = useDeleteWorldViewModel(); 
+  const {characters, loading: charactersLoading,} = useWorldCharactersViewModel(world?.id ?? null);
 
   useFocusEffect(
   useCallback(() => {
@@ -70,13 +72,6 @@ export function WorldDetailsScreen({ route, navigation }: any) {
         padding: 20,
       }}
     >
-      {/* <TouchableOpacity onPress={() => navigation.goBack()}>
-  <Icon
-    name="arrow-back"
-    size={24}
-    color={CosmicTheme.colors.starWhite}
-  />
-</TouchableOpacity> */}
 
       {/* World Card */}
       <View style={[CosmicTheme.containers.listItem1, { padding: 20 }]}>
@@ -92,6 +87,53 @@ export function WorldDetailsScreen({ route, navigation }: any) {
         >
           {world.description}
         </Text>
+
+        <View style={{ marginTop: 24 }}>
+  <Text style={CosmicTheme.text.heading}>
+    Characters
+  </Text>
+
+  <View
+    style={{
+      flexDirection: "row",
+      flexWrap: "wrap",
+      gap: 12,
+      marginTop: 12,
+    }}
+  >
+    {characters.map(character => (
+      <TouchableOpacity
+        key={character.id}
+        onPress={() =>
+          navigation.navigate("CharacterDetails", {
+            id: character.id,
+          })
+        }
+        style={{
+          backgroundColor: CosmicTheme.colors.characterBlue,
+          paddingHorizontal: 16,
+          paddingVertical: 8,
+          borderRadius: 999, // bubble!
+        }}
+      >
+        <Text
+          style={{
+            color: CosmicTheme.colors.starWhite,
+            fontWeight: "600",
+          }}
+        >
+          {character.name}
+        </Text>
+      </TouchableOpacity>
+    ))}
+
+    {!charactersLoading && characters.length === 0 && (
+      <Text style={CosmicTheme.text.listSubtitle}>
+        No characters in this world yet
+      </Text>
+    )}
+  </View>
+</View>
 
         {/* Divider */}
         <View

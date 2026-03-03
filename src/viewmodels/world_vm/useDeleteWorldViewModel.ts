@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
-import { WorldRepository } from "../data/repository/WorldRepository";
-import { WorldService } from "../data/services/WorldService";
+import { WorldRepository } from "../../data/repository/WorldRepository";
+import { WorldService } from "../../data/services/WorldService";
 
 export function useDeleteWorldViewModel() {
   const repository = useMemo(

@@ -71,4 +71,15 @@ async updateCharacter(
   await this.collection.doc(characterId).delete();
 }
 
+  async getCharactersByWorld(worldRef: FirebaseFirestoreTypes.DocumentReference) {
+  const snapshot = await this.collection
+    .where('worldId', '==', worldRef)
+    .get();
+
+  return snapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+}
+
 }

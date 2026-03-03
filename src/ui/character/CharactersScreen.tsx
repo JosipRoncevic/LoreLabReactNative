@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import {View,Text,FlatList,TouchableOpacity,Alert, ImageBackground, StyleSheet, Modal,} from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useWorldListViewModel } from "../../viewmodels/useWorldListViewModel";
 import { CosmicTheme } from "../themes/CosmicTheme";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { CreateItemDialog } from "../dialogs/CreateItemDialog";
@@ -89,9 +88,9 @@ export default function CharactersScreen({ navigation }: Props) {
    onPress={() =>
      navigation.navigate("CreateCharacter", {
        mode: "edit",
-       worldId: item.id,
+       characterId: item.id,
        name: item.name,
-       description: item.backstory,
+       backstory: item.backstory,
      })
    }
 >

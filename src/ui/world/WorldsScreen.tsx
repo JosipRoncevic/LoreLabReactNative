@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import {View,Text,FlatList,TouchableOpacity,Alert, ImageBackground, StyleSheet, Modal,} from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useWorldListViewModel } from "../../viewmodels/useWorldListViewModel";
 import { CosmicTheme } from "../themes/CosmicTheme";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { CreateItemDialog } from "../dialogs/CreateItemDialog";
 import { useFocusEffect } from "@react-navigation/core";
-import { useDeleteWorldViewModel } from "../../viewmodels/useDeleteWorldViewModel";
 import { useAuthViewModel } from "../../auth/useAuthViewModel";
+import { useWorldListViewModel } from "../../viewmodels/world_vm/useWorldListViewModel";
+import { useDeleteWorldViewModel } from "../../viewmodels/world_vm/useDeleteWorldViewModel";
 
 type Props = NativeStackScreenProps<any, "Worlds">;
 
@@ -17,7 +17,7 @@ export default function WorldsScreen({ navigation }: Props) {
   const { deleteWorld, loading: deleting } = useDeleteWorldViewModel();
   const { userEmail, logout } = useAuthViewModel();
   const [showProfileModal, setShowProfileModal] = React.useState(false);
-
+  
   useFocusEffect(
   React.useCallback(() => {
     loadWorlds();

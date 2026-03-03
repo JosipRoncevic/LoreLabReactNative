@@ -1,8 +1,7 @@
 import { Alert, Text, TouchableOpacity, View } from 'react-native';
-import { useWorldDetailsViewModel } from '../../viewmodels/useWorldDetailsViewModel';
+import { useWorldDetailsViewModel } from '../../viewmodels/world_vm/useWorldDetailsViewModel';
 import { CosmicTheme } from '../themes/CosmicTheme';
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { useDeleteWorldViewModel } from '../../viewmodels/useDeleteWorldViewModel';
 import { useFocusEffect } from '@react-navigation/core';
 import { useCallback } from 'react';
 import { useCharacterDetailsViewModel } from '../../viewmodels/character_vm/useCharacterDetailsViewModel';
@@ -39,7 +38,7 @@ export function CharacterDetailsScreen({ route, navigation }: any) {
     if(character){
       navigation.navigate("CreateCharacter", {
       mode: "edit",
-      worldId: character.id,
+      characterId: character.id,
       name: character.name,
       backstory: character.backstory,
     });
@@ -92,14 +91,42 @@ export function CharacterDetailsScreen({ route, navigation }: any) {
           {character.backstory}
         </Text>
 
-        <Text
-  style={[
-    CosmicTheme.text.body,
-    { marginTop: 12, lineHeight: 22 },
-  ]}
+      {character.world ? (
+  <View style={{ marginTop: 12 }}>
+    <TouchableOpacity
+  activeOpacity={0.8}
+  onPress={() => {
+  }}
+  style={{
+    alignSelf: "flex-start",
+    marginTop: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 999,
+    backgroundColor: CosmicTheme.colors.galaxyPink,
+  }}
 >
-  World: Unknown world
-</Text>
+  <Text
+    style={{
+      color: CosmicTheme.colors.starWhite,
+      fontSize: 14,
+      fontWeight: "600",
+    }}
+  >
+    World: {character.world.name}
+  </Text>
+</TouchableOpacity>
+  </View>
+) : (
+  <Text
+    style={[
+      CosmicTheme.text.body,
+      { marginTop: 12, fontStyle: "italic" },
+    ]}
+  >
+    No world assigned
+  </Text>
+)}
 
         {/* Divider */}
         <View

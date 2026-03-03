@@ -8,7 +8,6 @@ import {
   ImageBackground,
 } from "react-native";
 import { CosmicTheme } from "../themes/CosmicTheme";
-import { useCreateWorldViewModel } from "../../viewmodels/useCreateWorldViewModel";
 import { useCreateCharacterViewModel } from "../../viewmodels/character_vm/useCreateCharacterViewModel";
 
 export default function CreateCharacterScreen({ navigation, route }: any) {

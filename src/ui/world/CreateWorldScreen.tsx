@@ -8,7 +8,7 @@ import {
   ImageBackground,
 } from "react-native";
 import { CosmicTheme } from "../themes/CosmicTheme";
-import { useCreateWorldViewModel } from "../../viewmodels/useCreateWorldViewModel";
+import { useCreateWorldViewModel } from "../../viewmodels/world_vm/useCreateWorldViewModel";
 
 export default function CreateWorldScreen({ navigation, route }: any) {
   const {

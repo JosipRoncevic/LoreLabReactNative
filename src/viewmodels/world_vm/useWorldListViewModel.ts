@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { World } from "../data/models/World";
-import { WorldRepository } from "../data/repository/WorldRepository";
-import { WorldService } from "../data/services/WorldService";
+import { World } from "../../data/models/World";
+import { WorldRepository } from "../../data/repository/WorldRepository";
+import { WorldService } from "../../data/services/WorldService";
 
 export function useWorldListViewModel() {
   const [worlds, setWorlds] = useState<World[]>([]);
