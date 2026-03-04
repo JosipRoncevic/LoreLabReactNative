@@ -1,3 +1,4 @@
+import { DocumentReference } from "@react-native-firebase/app/lib/internal/web/firebaseFirestore";
 import firestore, {
   FirebaseFirestoreTypes,
 } from "@react-native-firebase/firestore";
@@ -7,6 +8,7 @@ export interface CreateCharacterDto {
   name: string;
   backstory: string;
   userId: string;
+  worldId?: FirebaseFirestoreTypes.DocumentReference | null;
 }
 
 export class CharacterService {
@@ -58,11 +60,13 @@ async updateCharacter(
     data: {
       name: string;
       backstory: string;
+      worldId?: FirebaseFirestoreTypes.DocumentReference | null;
     }
   ): Promise<void> {
     await this.collection.doc(characterId).update({
       name: data.name,
       backstory: data.backstory,
+      worldId: data.worldId ?? null,
       updatedOn: firestore.FieldValue.serverTimestamp(),
     });
   }

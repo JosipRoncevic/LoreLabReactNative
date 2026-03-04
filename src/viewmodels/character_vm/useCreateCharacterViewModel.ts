@@ -11,35 +11,34 @@ export function useCreateCharacterViewModel() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function createCharacter(name: string, backstory: string) {
-    try {
-      setLoading(true);
-      setError(null);
-      await repository.createCharacter(name, backstory);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Unknown error");
-      throw e;
-    } finally {
-      setLoading(false);
-    }
+  async function createCharacter(
+  name: string,
+  backstory: string,
+  worldId: string | null
+) {
+  setLoading(true);
+  setError(null);
+  try {
+    await repository.createCharacter(name, backstory, worldId);
+  } finally {
+    setLoading(false);
   }
+}
 
-  async function updateCharacter(
-    characterId: string,
-    name: string,
-    backstory: string
-  ) {
-    try {
-      setLoading(true);
-      setError(null);
-      await repository.editCharacter(characterId, name, backstory);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Unknown error");
-      throw e;
-    } finally {
-      setLoading(false);
-    }
+async function updateCharacter(
+  characterId: string,
+  name: string,
+  backstory: string,
+  worldId: string | null
+) {
+  setLoading(true);
+  setError(null);
+  try {
+    await repository.editCharacter(characterId, name, backstory, worldId);
+  } finally {
+    setLoading(false);
   }
+}
 
   return {
     createCharacter,

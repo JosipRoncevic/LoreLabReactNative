@@ -78,31 +78,42 @@ export class CharacterRepository {
      };
    }
 
-  async createCharacter(name: string, backstory: string): Promise<void> {
+async createCharacter(
+  name: string,
+  backstory: string,
+  worldId: string | null
+): Promise<void> {
   const user = auth().currentUser;
   if (!user) throw new Error("User not authenticated");
+
+  const worldRef = worldId
+    ? firestore().collection("worlds").doc(worldId)
+    : null;
 
   await this.service.addCharacter({
     name,
     backstory,
     userId: user.uid,
+    worldId: worldRef ?? null,
   });
-  }
+}
 
   async editCharacter(
-    characterId: string,
-    name: string,
-    backstory: string
-  ): Promise<void> {
-    if (!name.trim()) {
-      throw new Error("Character name cannot be empty");
-    }
+  characterId: string,
+  name: string,
+  backstory: string,
+  worldId: string | null
+): Promise<void> {
+  const worldRef = worldId
+    ? firestore().collection("worlds").doc(worldId)
+    : null;
 
-    await this.service.updateCharacter(characterId, {
-      name,
-      backstory,
-    });
-  }
+  await this.service.updateCharacter(characterId, {
+    name,
+    backstory,
+    worldId: worldRef ?? null,
+  });
+}
 
   async deleteCharacter(characterId: string): Promise<void> {
   await this.service.deleteCharacter(characterId);
