@@ -40,7 +40,7 @@ export function StoryDetailsScreen({ route, navigation }: any) {
         title: story.title,
         content: story.content,
         worldId: story.worldRef?.id ?? null,
-
+        characterIds: story.characters?.map(char => char.id) ?? [],
       });
     }
   }
@@ -124,6 +124,54 @@ export function StoryDetailsScreen({ route, navigation }: any) {
     No world assigned
   </Text>
 )}
+{/* Character References */}
+<View style={{ marginTop: 16 }}>
+  <Text style={[CosmicTheme.text.listSubtitle, { marginBottom: 8 }]}>
+    Characters
+  </Text>
+
+  {story.characters && story.characters.length > 0 ? (
+    <View
+      style={{
+        flexDirection: "row",
+        flexWrap: "wrap",
+        gap: 8,
+      }}
+    >
+      {story.characters.map(character => (
+        <TouchableOpacity
+          key={character.id}
+          activeOpacity={0.8}
+          style={{
+            paddingHorizontal: 12,
+            paddingVertical: 6,
+            borderRadius: 999,
+            backgroundColor: CosmicTheme.colors.characterBlue,
+          }}
+        >
+          <Text
+            style={{
+              color: CosmicTheme.colors.starWhite,
+              fontSize: 13,
+              fontWeight: "600",
+            }}
+          >
+            {character.name}
+          </Text>
+        </TouchableOpacity>
+      ))}
+    </View>
+  ) : (
+    <Text
+      style={[
+        CosmicTheme.text.body,
+        { fontStyle: "italic", color: CosmicTheme.colors.starWhite },
+      ]}
+    >
+      No characters in this world yet.
+    </Text>
+  )}
+</View>
 
         {/* Divider */}
         <View

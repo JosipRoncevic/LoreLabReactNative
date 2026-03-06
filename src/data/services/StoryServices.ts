@@ -8,6 +8,7 @@ export interface CreateStoryDto {
   content: string;
   userId: string;
   worldId?: FirebaseFirestoreTypes.DocumentReference | null; 
+  characterRefs?: FirebaseFirestoreTypes.DocumentReference[];
 }
 
 export class StoryService {
@@ -49,26 +50,29 @@ async getStoryById(
  async addStory(data: CreateStoryDto): Promise<void> {
   await this.collection.add({
     ...data,
+    characterRefs: data.characterRefs ?? [],
     createdOn: firestore.FieldValue.serverTimestamp(),
     updatedOn: firestore.FieldValue.serverTimestamp(),
   });
 }
 
 async updateStory(
-    storyId: string,
-    data: {
-      title: string;
-      content: string;
-      worldId?: FirebaseFirestoreTypes.DocumentReference | null;
-    }
-  ): Promise<void> {
-    await this.collection.doc(storyId).update({
-      title: data.title,
-      content: data.content,
-      worldId: data.worldId?? null,
-      updatedOn: firestore.FieldValue.serverTimestamp(),
-    });
+  storyId: string,
+  data: {
+    title: string;
+    content: string;
+    worldId?: FirebaseFirestoreTypes.DocumentReference | null;
+    characterRefs?: FirebaseFirestoreTypes.DocumentReference[];
   }
+): Promise<void> {
+  await this.collection.doc(storyId).update({
+    title: data.title,
+    content: data.content,
+    worldId: data.worldId ?? null,
+    characterRefs: data.characterRefs ?? [],
+    updatedOn: firestore.FieldValue.serverTimestamp(),
+  });
+}
 
   async deleteStory(storyId: string): Promise<void> {
   await this.collection.doc(storyId).delete();

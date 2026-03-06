@@ -91,6 +91,7 @@ export default function StoriesScreen({ navigation }: Props) {
                           title: item.title,
                           content: item.content,
                           worldId: item.worldRef?.id ?? null,
+                          characterIds: item.characters?.map(char => char.id) ?? [],
                         })
                       }
                     >

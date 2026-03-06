@@ -5,6 +5,7 @@ import { World } from "../models/World";
 import firestore, {
   FirebaseFirestoreTypes,
 } from "@react-native-firebase/firestore";
+import { Character } from "../models/Character";
 
 
 export class StoryRepository {
@@ -19,19 +20,34 @@ export class StoryRepository {
     return data as Story[];
   }
 
-  async fetchAllStories(): Promise<Story[]> {
-    const data = await this.service.getAllStories();
-  
-    return data.map((item: any) => ({
+async fetchAllStories(): Promise<Story[]> {
+  const data = await this.service.getAllStories();
+
+  return Promise.all(
+    data.map(async (item: any) => ({
       id: item.id,
       title: item.title,
       content: item.content,
       userId: item.userId,
       worldRef: item.worldId ?? null,
+      characterRefs: item.characterRefs ?? [],
+      characters: item.characterRefs
+  ? (
+      await Promise.all(
+        item.characterRefs.map(async (ref: FirebaseFirestoreTypes.DocumentReference) => {
+          const doc = await ref.get();
+          const data = doc.data();
+          if (!data) return null; 
+          return { id: doc.id, name: data.name ?? "Unnamed" };
+        })
+      )
+    ).filter(Boolean)
+  : [],
       createdOn: item.createdOn.toDate(),
       updatedOn: item.updatedOn.toDate(),
-    }));
-  }
+    }))
+  );
+}
 
   async getStory(storyId: string): Promise<Story> {
     const doc = await this.service.getStoryById(storyId);
@@ -45,42 +61,60 @@ export class StoryRepository {
       content: data.content,
       userId: data.userId,
       worldRef: data.worldId,
-      //characterRefs: data.characterRefs || [],
+      characterRefs: data.characterRefs ?? [],
       createdOn: data.createdOn.toDate(),
       updatedOn: data.updatedOn.toDate(),
     };
   }
 
-  async createStory(title: string, content: string, worldId: string | null): Promise<void> {
-    const user = auth().currentUser;
-    if (!user) throw new Error("User not authenticated");
+  async createStory(
+  title: string,
+  content: string,
+  worldId: string | null,
+  characterIds: string[] = []
+): Promise<void> {
+  const user = auth().currentUser;
+  if (!user) throw new Error("User not authenticated");
 
-    const worldRef = worldId ? firestore().collection("worlds").doc(worldId): null;
-
-    await this.service.addStory({
-      title,
-      content,
-      userId: user.uid,
-      worldId: worldRef ?? null,
-    });
-  }
-
-  async editStory(
-    storyId: string,
-    title: string,
-    content: string,
-    worldId: string | null
-  ): Promise<void> {
   const worldRef = worldId
     ? firestore().collection("worlds").doc(worldId)
     : null;
 
-    await this.service.updateStory(storyId, {
-      title,
-      content,
-      worldId: worldRef ?? null,
-    });
-  }
+  const characterRefs = characterIds.map(id =>
+    firestore().collection("characters").doc(id)
+  );
+
+  await this.service.addStory({
+    title,
+    content,
+    userId: user.uid,
+    worldId: worldRef,
+    characterRefs,
+  });
+}
+
+async editStory(
+  storyId: string,
+  title: string,
+  content: string,
+  worldId: string | null,
+  characterIds: string[] = []
+): Promise<void> {
+  const worldRef = worldId
+    ? firestore().collection("worlds").doc(worldId)
+    : null;
+
+  const characterRefs = characterIds.map(id =>
+    firestore().collection("characters").doc(id)
+  );
+
+  await this.service.updateStory(storyId, {
+    title,
+    content,
+    worldId: worldRef,
+    characterRefs,
+  });
+}
 
   async deleteStory(storyId: string): Promise<void> {
     await this.service.deleteStory(storyId);
@@ -93,20 +127,43 @@ export class StoryRepository {
   if (!data) throw new Error("Story not found");
 
   let world: World | null = null;
+  let characters: Character[] = [];
 
   if (data.worldId) {
     const worldSnap = await data.worldId.get();
+
     if (worldSnap.exists) {
       const worldData = worldSnap.data()!;
+
       world = {
-      id: worldSnap.id,
-      name: worldData.name,
-      description: worldData.description,
-      userId: worldData.userId,
-      createdOn: worldData.createdOn.toDate(),
-      updatedOn: worldData.updatedOn.toDate(),
-    };
+        id: worldSnap.id,
+        name: worldData.name,
+        description: worldData.description,
+        userId: worldData.userId,
+        createdOn: worldData.createdOn.toDate(),
+        updatedOn: worldData.updatedOn.toDate(),
+      };
     }
+  }
+
+  if (data.characterRefs && data.characterRefs.length > 0) {
+    const snaps = await Promise.all(
+      data.characterRefs.map((ref: FirebaseFirestoreTypes.DocumentReference) =>
+        ref.get()
+      )
+    );
+
+    characters = snaps
+      .filter(s => s.exists)
+      .map(s => ({
+        id: s.id,
+        name: s.data()?.name ?? "Unnamed",
+        backstory: s.data()?.backstory ?? "",
+        userId: s.data()?.userId ?? "",
+        worldRef: s.data()?.worldRef ?? null,
+        createdOn: s.data()?.createdOn.toDate(),
+        updatedOn: s.data()?.updatedOn.toDate(),
+      }));
   }
 
   return {
@@ -114,9 +171,13 @@ export class StoryRepository {
     title: data.title,
     content: data.content,
     userId: data.userId,
+
     worldRef: data.worldId,
     world,
-    //characterRefs:data.characterRefs ?? [],
+
+    characterRefs: data.characterRefs ?? [],
+    characters,
+
     createdOn: data.createdOn.toDate(),
     updatedOn: data.updatedOn.toDate(),
   };

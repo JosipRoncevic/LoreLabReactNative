@@ -11,6 +11,7 @@ import {
 import { CosmicTheme } from "../themes/CosmicTheme";
 import { useCreateStoryViewModel } from "../../viewmodels/story_vm/useCreateStoryViewModel";
 import { useWorldListViewModel } from "../../viewmodels/world_vm/useWorldListViewModel";
+import { useCharacterListViewModel } from "../../viewmodels/character_vm/useCharacterListViewModel";
 
 export default function CreateStoryScreen({ navigation, route }: any) {
   const {
@@ -25,6 +26,10 @@ export default function CreateStoryScreen({ navigation, route }: any) {
     loadWorlds,
   } = useWorldListViewModel();
 
+  const { characters, loadCharacters } = useCharacterListViewModel();
+  const [selectedCharacterIds, setSelectedCharacterIds] = useState<string[]>([]);
+const [charactersDropdownOpen, setCharactersDropdownOpen] = useState(false);
+
   const isEditMode = route?.params?.mode === "edit";
 
   const [title, setTitle] = useState("");
@@ -37,10 +42,16 @@ export default function CreateStoryScreen({ navigation, route }: any) {
 }, []);
 
   useEffect(() => {
+  loadCharacters();
+}, []);
+
+  useEffect(() => {
     if (isEditMode) {
       setTitle(route.params.title ?? "");
       setContent(route.params.content ?? "");
       setSelectedWorldId(route.params.worldId ?? null);
+      setSelectedCharacterIds(route.params.characterIds ?? []); // ← pre-select characters
+
     }
   }, [isEditMode, route.params]);
 
@@ -52,10 +63,11 @@ export default function CreateStoryScreen({ navigation, route }: any) {
         route.params.storyId,
         title,
         content,
-        selectedWorldId
+        selectedWorldId,
+        selectedCharacterIds
       );
     } else {
-      await createStory(title, content, selectedWorldId);
+      await createStory(title, content, selectedWorldId, selectedCharacterIds);
     }
 
     navigation.goBack();
@@ -163,6 +175,60 @@ export default function CreateStoryScreen({ navigation, route }: any) {
             </ScrollView>
           </View>
         )}
+
+        {/* Character multi-select dropdown */}
+<Text style={styles.label}>Characters</Text>
+
+<TouchableOpacity
+  style={styles.dropdownHeader}
+  onPress={() => setCharactersDropdownOpen(prev => !prev)}
+>
+  <Text style={styles.dropdownHeaderText}>
+    {selectedCharacterIds.length > 0
+      ? `${selectedCharacterIds.length} selected`
+      : "No characters"}
+  </Text>
+  <Text style={styles.dropdownArrow}>
+    {charactersDropdownOpen ? "▲" : "▼"}
+  </Text>
+</TouchableOpacity>
+
+{charactersDropdownOpen && (
+  <View style={styles.dropdownBody}>
+    <ScrollView style={{ maxHeight: 220 }}>
+      {/* Optional: deselect all */}
+      <TouchableOpacity
+        style={styles.worldItem}
+        onPress={() => setSelectedCharacterIds([])}
+      >
+        <Text style={styles.worldText}>None</Text>
+      </TouchableOpacity>
+
+      {characters.map(char => {
+        const selected = selectedCharacterIds.includes(char.id);
+        return (
+          <TouchableOpacity
+            key={char.id}
+            style={[styles.worldItem, selected && styles.worldItemSelected]}
+            onPress={() => {
+              setSelectedCharacterIds(prev =>
+                selected
+                  ? prev.filter(id => id !== char.id)
+                  : [...prev, char.id]
+              );
+            }}
+          >
+            <Text
+              style={[styles.worldText, selected && styles.worldTextSelected]}
+            >
+              {char.name}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
+    </ScrollView>
+  </View>
+)}
 
         {error && <Text style={styles.error}>{error}</Text>}
 
