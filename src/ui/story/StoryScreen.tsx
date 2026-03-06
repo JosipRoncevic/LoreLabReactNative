@@ -90,6 +90,7 @@ export default function StoriesScreen({ navigation }: Props) {
                           storyId: item.id,
                           title: item.title,
                           content: item.content,
+                          worldId: item.worldRef?.id ?? null,
                         })
                       }
                     >

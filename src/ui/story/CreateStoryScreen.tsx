@@ -6,9 +6,11 @@ import {
   TouchableOpacity,
   StyleSheet,
   ImageBackground,
+  ScrollView,
 } from "react-native";
 import { CosmicTheme } from "../themes/CosmicTheme";
 import { useCreateStoryViewModel } from "../../viewmodels/story_vm/useCreateStoryViewModel";
+import { useWorldListViewModel } from "../../viewmodels/world_vm/useWorldListViewModel";
 
 export default function CreateStoryScreen({ navigation, route }: any) {
   const {
@@ -18,15 +20,27 @@ export default function CreateStoryScreen({ navigation, route }: any) {
     error,
   } = useCreateStoryViewModel();
 
+  const {
+    worlds,
+    loadWorlds,
+  } = useWorldListViewModel();
+
   const isEditMode = route?.params?.mode === "edit";
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [selectedWorldId, setSelectedWorldId] = useState<string | null>(null);
+  const [worldDropdownOpen, setWorldDropdownOpen] = useState(false);
+
+  useEffect(() => {
+  loadWorlds();
+}, []);
 
   useEffect(() => {
     if (isEditMode) {
       setTitle(route.params.title ?? "");
       setContent(route.params.content ?? "");
+      setSelectedWorldId(route.params.worldId ?? null);
     }
   }, [isEditMode, route.params]);
 
@@ -37,10 +51,11 @@ export default function CreateStoryScreen({ navigation, route }: any) {
       await updateStory(
         route.params.storyId,
         title,
-        content
+        content,
+        selectedWorldId
       );
     } else {
-      await createStory(title, content);
+      await createStory(title, content, selectedWorldId);
     }
 
     navigation.goBack();
@@ -49,6 +64,11 @@ export default function CreateStoryScreen({ navigation, route }: any) {
   function onCancel() {
     navigation.goBack();
   }
+
+  const selectedWorldName =
+    selectedWorldId
+      ? worlds.find(w => w.id === selectedWorldId)?.name
+      : "No world";
 
   return (
     <ImageBackground
@@ -81,6 +101,68 @@ export default function CreateStoryScreen({ navigation, route }: any) {
           numberOfLines={6}
           style={[styles.input, styles.textArea]}
         />
+
+        {/* World dropdown */}
+        <Text style={styles.label}>World</Text>
+
+        <TouchableOpacity
+          style={styles.dropdownHeader}
+          onPress={() => setWorldDropdownOpen(prev => !prev)}
+        >
+          <Text style={styles.dropdownHeaderText}>
+            {selectedWorldName}
+          </Text>
+          <Text style={styles.dropdownArrow}>
+            {worldDropdownOpen ? "▲" : "▼"}
+          </Text>
+        </TouchableOpacity>
+
+        {worldDropdownOpen && (
+          <View style={styles.dropdownBody}>
+            <ScrollView style={{ maxHeight: 220 }}>
+              {/* No world */}
+              <TouchableOpacity
+                style={[
+                  styles.worldItem,
+                  selectedWorldId === null && styles.worldItemSelected,
+                ]}
+                onPress={() => {
+                  setSelectedWorldId(null);
+                  setWorldDropdownOpen(false);
+                }}
+              >
+                <Text style={styles.worldText}>No world</Text>
+              </TouchableOpacity>
+
+              {worlds.map(world => {
+                const selected = selectedWorldId === world.id;
+
+                return (
+                  <TouchableOpacity
+                    key={world.id}
+                    style={[
+                      styles.worldItem,
+                      selected && styles.worldItemSelected,
+                    ]}
+                    onPress={() => {
+                      setSelectedWorldId(world.id);
+                      setWorldDropdownOpen(false);
+                    }}
+                  >
+                    <Text
+                      style={[
+                        styles.worldText,
+                        selected && styles.worldTextSelected,
+                      ]}
+                    >
+                      {world.name}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </View>
+        )}
 
         {error && <Text style={styles.error}>{error}</Text>}
 
@@ -137,18 +219,64 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    backgroundColor: "rgba(45, 27, 105, 0.4)",
+    backgroundColor: "rgba(45,27,105,0.4)",
     borderRadius: 12,
     borderWidth: 2,
-    borderColor: "rgba(236, 72, 153, 0.3)",
+    borderColor: "rgba(236,72,153,0.3)",
     color: CosmicTheme.colors.starWhite,
     padding: 12,
     fontSize: 16,
   },
 
   textArea: {
-    height: 140,
+    height: 120,
     textAlignVertical: "top",
+  },
+
+  dropdownHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 14,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: "rgba(236,72,153,0.3)",
+    backgroundColor: "rgba(45,27,105,0.4)",
+  },
+
+  dropdownHeaderText: {
+    color: CosmicTheme.colors.starWhite,
+    fontSize: 16,
+  },
+
+  dropdownArrow: {
+    color: CosmicTheme.colors.starWhite,
+    fontSize: 14,
+  },
+
+  dropdownBody: {
+    marginTop: 8,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "rgba(236,72,153,0.3)",
+    backgroundColor: "rgba(11,12,26,0.95)",
+  },
+
+  worldItem: {
+    padding: 14,
+  },
+
+  worldItemSelected: {
+    backgroundColor: "rgba(236,72,153,0.25)",
+  },
+
+  worldText: {
+    color: CosmicTheme.colors.starWhite,
+    fontSize: 16,
+  },
+
+  worldTextSelected: {
+    fontWeight: "600",
   },
 
   error: {
@@ -170,13 +298,11 @@ const styles = StyleSheet.create({
     borderColor: CosmicTheme.colors.starWhite,
     paddingVertical: 14,
     alignItems: "center",
-    backgroundColor: "transparent",
   },
 
   cancelText: {
     color: CosmicTheme.colors.starWhite,
     fontSize: 16,
-    fontWeight: "500",
   },
 
   createButton: {
@@ -186,10 +312,6 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 14,
     alignItems: "center",
-    shadowColor: CosmicTheme.colors.galaxyPink,
-    shadowOpacity: 0.6,
-    shadowRadius: 10,
-    elevation: 6,
   },
 
   createText: {

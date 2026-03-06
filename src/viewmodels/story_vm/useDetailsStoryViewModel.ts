@@ -15,7 +15,7 @@ export function useStoryDetailsViewModel(storyId: string) {
   const fetchStory = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await repository.getStory(storyId);
+      const data = await repository.getStoryWithWorld(storyId);
       setStory(data);
     } finally {
       setLoading(false);

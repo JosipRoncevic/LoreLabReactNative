@@ -91,6 +91,8 @@ export default function CharactersScreen({ navigation }: Props) {
        characterId: item.id,
        name: item.name,
        backstory: item.backstory,
+       worldId: item.worldRef?.id ?? null,
+
      })
    }
 >

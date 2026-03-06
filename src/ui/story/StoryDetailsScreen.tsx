@@ -39,6 +39,8 @@ export function StoryDetailsScreen({ route, navigation }: any) {
         storyId: story.id,
         title: story.title,
         content: story.content,
+        worldId: story.worldRef?.id ?? null,
+
       });
     }
   }
@@ -85,6 +87,43 @@ export function StoryDetailsScreen({ route, navigation }: any) {
         >
           {story.content || "No content"}
         </Text>
+
+           {story.world ? (
+  <View style={{ marginTop: 12 }}>
+    <TouchableOpacity
+  activeOpacity={0.8}
+  onPress={() => {
+  }}
+  style={{
+    alignSelf: "flex-start",
+    marginTop: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 999,
+    backgroundColor: CosmicTheme.colors.galaxyPink,
+  }}
+>
+  <Text
+    style={{
+      color: CosmicTheme.colors.starWhite,
+      fontSize: 14,
+      fontWeight: "600",
+    }}
+  >
+    World: {story.world.name}
+  </Text>
+</TouchableOpacity>
+  </View>
+) : (
+  <Text
+    style={[
+      CosmicTheme.text.body,
+      { marginTop: 12, fontStyle: "italic" },
+    ]}
+  >
+    No world assigned
+  </Text>
+)}
 
         {/* Divider */}
         <View

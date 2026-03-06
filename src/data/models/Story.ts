@@ -1,4 +1,5 @@
 import { DocumentReference } from "@react-native-firebase/app/lib/internal/web/firebaseFirestore";
+import { World } from "./World";
 
 export interface Story {
   id: string;
@@ -6,7 +7,8 @@ export interface Story {
   content:string;
   userId: string;
   worldRef: DocumentReference;
-  characterRefs: DocumentReference[];
+  world?: World | null;
+  //characterRefs: DocumentReference[];
   createdOn: Date;
   updatedOn: Date;
 }

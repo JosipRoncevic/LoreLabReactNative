@@ -41,6 +41,7 @@ export function CharacterDetailsScreen({ route, navigation }: any) {
       characterId: character.id,
       name: character.name,
       backstory: character.backstory,
+      worldId: character.worldRef?.id ?? null,
     });
     }
     

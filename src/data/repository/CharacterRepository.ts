@@ -21,10 +21,19 @@ export class CharacterRepository {
     return data as Character[];
   }
 
-  async fetchAllCharacters(): Promise<Character[]>{
-    const data = await this.service.getAllCharacters();
-    return data as Character[];
-  }
+  async fetchAllCharacters(): Promise<Character[]> {
+  const data = await this.service.getAllCharacters();
+
+  return data.map((item: any) => ({
+    id: item.id,
+    name: item.name,
+    backstory: item.backstory,
+    userId: item.userId,
+    worldRef: item.worldId ?? null,
+    createdOn: item.createdOn.toDate(),
+    updatedOn: item.updatedOn.toDate(),
+  }));
+}
 
   async getCharacterWithWorld(characterId: string): Promise<Character> {
   const doc = await this.service.getCharacterById(characterId);

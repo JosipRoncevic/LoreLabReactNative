@@ -36,13 +36,17 @@ export default function CreateCharacterScreen({ navigation, route }: any) {
     loadWorlds();
   }, []);
 
-  useEffect(() => {
-    if (isEditMode) {
-      setName(route.params.name ?? "");
-      setBackstory(route.params.backstory ?? "");
-      setSelectedWorldId(route.params.worldId ?? null);
-    }
-  }, [isEditMode, route.params]);
+useEffect(() => {
+  if (isEditMode) {
+    setName(route.params.name ?? "");
+    setBackstory(route.params.backstory ?? "");
+    setSelectedWorldId(
+      route.params.worldId != null
+        ? String(route.params.worldId)
+        : null
+    );
+  }
+}, [isEditMode, route.params]);
 
   async function onSave() {
     if (!name.trim()) return;

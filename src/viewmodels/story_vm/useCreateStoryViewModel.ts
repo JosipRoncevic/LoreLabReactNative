@@ -12,11 +12,11 @@ export function useCreateStoryViewModel() {
   const [error, setError] = useState<string | null>(null);
 
   // Create a new story
-  async function createStory(title: string, content: string) {
+  async function createStory(title: string, content: string, worldId:string | null) {
     try {
       setLoading(true);
       setError(null);
-      await repository.createStory(title, content);
+      await repository.createStory(title, content,worldId);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Unknown error");
       throw e;
@@ -29,12 +29,13 @@ export function useCreateStoryViewModel() {
   async function updateStory(
     storyId: string,
     title: string,
-    content: string
+    content: string,
+    worldId: string | null
   ) {
     try {
       setLoading(true);
       setError(null);
-      await repository.editStory(storyId, title, content);
+      await repository.editStory(storyId, title, content, worldId);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Unknown error");
       throw e;

@@ -7,6 +7,7 @@ export interface CreateStoryDto {
   title: string;
   content: string;
   userId: string;
+  worldId?: FirebaseFirestoreTypes.DocumentReference | null; 
 }
 
 export class StoryService {
@@ -58,17 +59,30 @@ async updateStory(
     data: {
       title: string;
       content: string;
+      worldId?: FirebaseFirestoreTypes.DocumentReference | null;
     }
   ): Promise<void> {
     await this.collection.doc(storyId).update({
       title: data.title,
       content: data.content,
+      worldId: data.worldId?? null,
       updatedOn: firestore.FieldValue.serverTimestamp(),
     });
   }
 
   async deleteStory(storyId: string): Promise<void> {
   await this.collection.doc(storyId).delete();
+}
+
+  async getStoriesByWorld(worldRef: FirebaseFirestoreTypes.DocumentReference) {
+  const snapshot = await this.collection
+    .where('worldId', '==', worldRef)
+    .get();
+
+  return snapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
 }
 
 }

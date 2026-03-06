@@ -6,14 +6,16 @@ import { useFocusEffect } from '@react-navigation/core';
 import { useCallback } from 'react';
 import { useDeleteWorldViewModel } from '../../viewmodels/world_vm/useDeleteWorldViewModel';
 import { useWorldCharactersViewModel } from '../../viewmodels/character_vm/useWorldCharactersViewModel';
+import { useWorldStoriesViewModel } from '../../viewmodels/story_vm/useWorldStoriesViewModel';
 
 export function WorldDetailsScreen({ route, navigation }: any) {
   const { id } = route.params;
   const { world, loading, reload} = useWorldDetailsViewModel(id);
   const {deleteWorld} = useDeleteWorldViewModel(); 
   const {characters, loading: charactersLoading,} = useWorldCharactersViewModel(world?.id ?? null);
+  const {stories, loading: storiesLoading,} = useWorldStoriesViewModel(world?.id ?? null);
 
-  useFocusEffect(
+    useFocusEffect(
   useCallback(() => {
     reload();
   }, [reload])
@@ -88,10 +90,9 @@ export function WorldDetailsScreen({ route, navigation }: any) {
           {world.description}
         </Text>
 
-        <View style={{ marginTop: 24 }}>
-  <Text style={CosmicTheme.text.heading}>
-    Characters
-  </Text>
+{/* Characters */}
+<View style={{ marginTop: 24 }}>
+  <Text style={CosmicTheme.text.heading}>Characters</Text>
 
   <View
     style={{
@@ -113,7 +114,7 @@ export function WorldDetailsScreen({ route, navigation }: any) {
           backgroundColor: CosmicTheme.colors.characterBlue,
           paddingHorizontal: 16,
           paddingVertical: 8,
-          borderRadius: 999, // bubble!
+          borderRadius: 999,
         }}
       >
         <Text
@@ -130,6 +131,52 @@ export function WorldDetailsScreen({ route, navigation }: any) {
     {!charactersLoading && characters.length === 0 && (
       <Text style={CosmicTheme.text.listSubtitle}>
         No characters in this world yet
+      </Text>
+    )}
+  </View>
+</View>
+
+{/* Stories */}
+<View style={{ marginTop: 24 }}>
+  <Text style={CosmicTheme.text.heading}>Stories</Text>
+
+  <View
+    style={{
+      flexDirection: "row",
+      flexWrap: "wrap",
+      gap: 12,
+      marginTop: 12,
+    }}
+  >
+    {stories.map(story => (
+      <TouchableOpacity
+        key={story.id}
+        onPress={() =>
+          navigation.navigate("StoryDetails", {
+            id: story.id,
+          })
+        }
+        style={{
+          backgroundColor: CosmicTheme.colors.storyGreen,
+          paddingHorizontal: 16,
+          paddingVertical: 8,
+          borderRadius: 999,
+        }}
+      >
+        <Text
+          style={{
+            color: CosmicTheme.colors.starWhite,
+            fontWeight: "600",
+          }}
+        >
+          {story.title}
+        </Text>
+      </TouchableOpacity>
+    ))}
+
+    {!storiesLoading && stories.length === 0 && (
+      <Text style={CosmicTheme.text.listSubtitle}>
+        No stories in this world yet
       </Text>
     )}
   </View>
