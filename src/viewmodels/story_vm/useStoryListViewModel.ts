@@ -13,7 +13,7 @@ export function useStoryListViewModel() {
   async function loadStories() {
     try {
       setLoading(true);
-      const storiesFromDb = await repository.fetchAllStories();
+      const storiesFromDb = await repository.fetchStories();
       setStories(storiesFromDb);
     } catch (e: unknown) {
       if (e instanceof Error) {

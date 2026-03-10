@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Character } from "../../data/models/Character";
 import { CharacterRepository } from "../../data/repository/CharacterRepository";
 import { CharacterService } from "../../data/services/CharacterService";
+import React from "react";
 
 
 export function useCharacterListViewModel() {
@@ -9,12 +10,15 @@ export function useCharacterListViewModel() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const repository = new CharacterRepository(new CharacterService());
+ const repository = React.useMemo(
+  () => new CharacterRepository(new CharacterService()),
+  []
+);
 
   async function loadCharacters() {
     try {
       setLoading(true);
-      const charactersFromDb = await repository.fetchAllCharacters();
+      const charactersFromDb = await repository.fetchCharacters();
       setCharacters(charactersFromDb);
     } catch (e: unknown) {
       if (e instanceof Error) {

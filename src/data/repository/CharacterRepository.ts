@@ -14,12 +14,21 @@ export class CharacterRepository {
   ) {}
 
   async fetchCharacters(): Promise<Character[]> {
-    const user = auth().currentUser;
-    if (!user) throw new Error('User not authenticated');
+  const user = auth().currentUser;
+  if (!user) throw new Error("User not authenticated");
 
-    const data = await this.service.getAllCharactersByUser(user.uid);
-    return data as Character[];
-  }
+  const data = await this.service.getAllCharactersByUser(user.uid);
+
+  return data.map((item: any) => ({
+    id: item.id,
+    name: item.name,
+    backstory: item.backstory,
+    userId: item.userId,
+    worldRef: item.worldId ?? null,
+    createdOn: item.createdOn.toDate(),
+    updatedOn: item.updatedOn.toDate(),
+  }));
+}
 
   async fetchAllCharacters(): Promise<Character[]> {
   const data = await this.service.getAllCharacters();
@@ -35,26 +44,36 @@ export class CharacterRepository {
   }));
 }
 
-  async getCharacterWithWorld(characterId: string): Promise<Character> {
+async getCharacterWithWorld(characterId: string): Promise<Character> {
   const doc = await this.service.getCharacterById(characterId);
   const data = doc.data();
 
-  if (!data) throw new Error("Character not found");
+  if (!data) {
+    throw new Error("Character not found");
+  }
 
   let world: World | null = null;
 
   if (data.worldId) {
-    const worldSnap = await data.worldId.get();
-    if (worldSnap.exists) {
-      const worldData = worldSnap.data()!;
-      world = {
-      id: worldSnap.id,
-      name: worldData.name,
-      description: worldData.description,
-      userId: worldData.userId,
-      createdOn: worldData.createdOn.toDate(),
-      updatedOn: worldData.updatedOn.toDate(),
-    };
+    try {
+      const worldSnap = await data.worldId.get();
+
+      if (worldSnap.exists) {
+        const worldData = worldSnap.data()!;
+
+        world = {
+          id: worldSnap.id,
+          name: worldData.name,
+          description: worldData.description,
+          userId: worldData.userId,
+          createdOn: worldData.createdOn.toDate(),
+          updatedOn: worldData.updatedOn.toDate(),
+        };
+      } else {
+        world = null;
+      }
+    } catch (error) {
+      world = null;
     }
   }
 
@@ -63,7 +82,7 @@ export class CharacterRepository {
     name: data.name,
     backstory: data.backstory,
     userId: data.userId,
-    worldRef: data.worldId,
+    worldRef: data.worldId ?? null,
     world,
     createdOn: data.createdOn.toDate(),
     updatedOn: data.updatedOn.toDate(),
