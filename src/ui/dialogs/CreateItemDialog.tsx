@@ -53,7 +53,7 @@ export function CreateItemDialog({
             onCreateCharacter();
           }}
         >
-          <Ionicons name="human" size={24} color="#fff" />
+          <Ionicons name="man" size={24} color="#fff" />
           <Text style={styles.text}>Character</Text>
         </TouchableOpacity>
 
